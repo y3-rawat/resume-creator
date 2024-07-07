@@ -45,23 +45,16 @@ def get_gemini_response(input_text, pdf_content, prompt):
 
 def input_pdf_setup(uploaded_file):
     if uploaded_file is not None:
-        # Define the path to save the uploaded PDF file
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
-        
-        # Save the uploaded PDF file
         uploaded_file.save(filepath)
         
-        # Open the PDF file
         with pdfplumber.open(filepath) as pdf:
-            # Check if the PDF has at least one page
             if len(pdf.pages) < 1:
                 raise ValueError("The PDF file has no pages.")
             
-            # Extract text content from the first page
             first_page = pdf.pages[0]
             text_content = first_page.extract_text()
             
-            # Encode the text content to base64
             pdf_parts = [{
                 "mime_type": "text/plain",
                 "data": base64.b64encode(text_content.encode()).decode()
@@ -107,5 +100,4 @@ def index():
     return render_template('index.html', response=response)
 
 if __name__ == '__main__':
-    print("d")
     app.run(debug=True)
