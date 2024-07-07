@@ -107,4 +107,5 @@ def index():
     return render_template('index.html', response=response)
 
 if __name__ == '__main__':
+    print("d")
     app.run(debug=True)
