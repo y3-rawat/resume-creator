@@ -1,18 +1,16 @@
 import os
-
-
 from flask import Flask, request, render_template, redirect, url_for, flash
 import google.generativeai as genai
 import base64
 import pdfplumber
 
-
+# Configure API Key
 genai.configure(api_key="AIzaSyD3kNDlEpRsF-Mb14oQfZNaqPF6ECnvKrA")
 
 app = Flask(__name__)
-app.secret_key ="skey"
+app.secret_key = "skey"
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
-
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)  # Ensure the upload folder exists
 
 model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
 
@@ -51,6 +49,8 @@ def input_pdf_setup(uploaded_file):
         # Define the path to save the uploaded PDF file
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
         
+        # Save the uploaded PDF file
+        uploaded_file.save(filepath)
         
         # Open the PDF file
         with pdfplumber.open(filepath) as pdf:
