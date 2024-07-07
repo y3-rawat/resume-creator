@@ -1,19 +1,9 @@
 {
     "version": 2,
-    "functions": {
-        "app.py": {
-            "maxDuration": 60
-        }
-    },
+    "builds": [
+      { "src": "main.py", "use": "@vercel/python" }
+    ],
     "routes": [
-        {
-            "src": "/static/(.*)",
-            "headers": { "cache-control": "s-maxage=31536000, immutable" },
-            "dest": "/static/$1"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/app.py"
-        }
+      { "src": "/(.*)", "dest": "/main.py" }
     ]
-}
+  }
