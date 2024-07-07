@@ -1,0 +1,12 @@
+
+
+
+flask
+requests
+
+Werkzeug
+google-generativeai
+PyGithub
+python-dotenv
+pdfplumber
+
