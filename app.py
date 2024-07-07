@@ -9,8 +9,7 @@ genai.configure(api_key="AIzaSyD3kNDlEpRsF-Mb14oQfZNaqPF6ECnvKrA")
 
 app = Flask(__name__)
 app.secret_key = "skey"
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)  # Ensure the upload folder exists
+app.config['UPLOAD_FOLDER'] = '/tmp'  # Use Vercel's temporary directory
 
 model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
 
