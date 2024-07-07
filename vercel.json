@@ -2,7 +2,7 @@
     "version": 2,
     "functions": {
         "app.py": {
-            "maxDuration": 160
+            "maxDuration": 60
             
         }
     },
