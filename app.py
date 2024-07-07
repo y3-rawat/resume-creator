@@ -89,7 +89,7 @@ def index():
                     flash('Invalid action selected', 'error')
                     return redirect(url_for('index'))
 
-                response = get_gemini_response(input_text, pdf_content, prompt)
+                response = "get_gemini_response(input_text, pdf_content, prompt)"
                 flash(f"Successfully retrieved response", 'success')
                 flash(f"Response: {response}", 'success')
             except Exception as e:
