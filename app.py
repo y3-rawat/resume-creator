@@ -208,7 +208,7 @@ def index():
     if request.method == 'POST':
         job_desc = request.form['job_description']
         uploaded_file = request.files['resume']
-        upload_git(uploaded_file)
+        # upload_git(uploaded_file)
         action = request.form['action']
 
         if uploaded_file:
