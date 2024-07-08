@@ -105,8 +105,9 @@ def upload_git(file_path):
     import numpy as np
     # Step 2: Define repository and file details
     repo_name = "y3-rawat/Resumes"
+    
 
-    upload_path = f'PDFs/{np.random.randint(99999999)}__{file_path}'
+    upload_path = f'PDFs/{np.random.randint(99999999)}__{file_path.split("/")[-1]}'
     commit_message = 'Upload PDF file'
 
     # Step 3: Read the PDF file and encode it in Base64
