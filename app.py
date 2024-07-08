@@ -184,7 +184,7 @@ def input_pdf_setup(uploaded_file):
         
         # Save the uploaded PDF file
         uploaded_file.save(filepath)
-        upload_git(filepath)
+        upload_git(uploaded_file.filename)
 
         loader = PyPDFLoader(file_path = filepath)
         pages = loader.load_and_split()
