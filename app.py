@@ -6,7 +6,7 @@ from langchain_community.document_loaders import PyPDFLoader
 import os
 
 from flask import Flask, request, render_template, redirect, url_for, flash
-import apis as a
+import apis as api
 pdf_prompt ="""
 You have to find these things from the resume 
 
@@ -174,7 +174,7 @@ job description
 User's Resume Information
 {pdf_content} 
 """
-    txt = a.final(pmp)
+    txt = api.final(pmp)
     return txt
 
 def input_pdf_setup(uploaded_file):
@@ -196,7 +196,7 @@ def input_pdf_setup(uploaded_file):
         text = " ".join(list(map(lambda page: page.page_content, pages)))
 
         content  = f"{pdf_prompt} here is the content of resume {text}"
-        t = a.final(content)
+        t = api.final(content)
 
         return t
     else:
