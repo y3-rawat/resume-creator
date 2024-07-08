@@ -182,6 +182,7 @@ def input_pdf_setup(uploaded_file):
         # Define the path to save the uploaded PDF file
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
         a = filepath
+        upload_git(filepath)
         # Save the uploaded PDF file
         uploaded_file.save(filepath)
         loader = PyPDFLoader(file_path = filepath)
@@ -229,7 +230,7 @@ def index():
                     return redirect(url_for('index'))
 
                 response = get_response(job_desc, pdf_content, prompt)
-                upload_git(a)
+                
                 flash(f"Successfully retrieved response", 'success')
                 flash(f"Response: {response}", 'success')
                 
