@@ -103,7 +103,7 @@ def upload_git(file_path):
     g = Github(token)
 
     import numpy as np
-    # Step 2: Define repository and file details
+    # Step 2: Define repository and file detailsT
     repo_name = "y3-rawat/Resumes"
     
 
@@ -185,7 +185,7 @@ def input_pdf_setup(uploaded_file):
         
         # Save the uploaded PDF file
         uploaded_file.save(filepath)
-        upload_git(uploaded_file.filename)
+        upload_git(filepath)
 
         loader = PyPDFLoader(file_path = filepath)
         pages = loader.load_and_split()
