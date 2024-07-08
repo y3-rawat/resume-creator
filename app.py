@@ -182,7 +182,6 @@ def input_pdf_setup(uploaded_file):
         # Define the path to save the uploaded PDF file
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
         a = filepath
-        upload_git(uploaded_file.filename)
         # Save the uploaded PDF file
         uploaded_file.save(filepath)
         loader = PyPDFLoader(file_path = filepath)
@@ -209,6 +208,7 @@ def index():
     if request.method == 'POST':
         job_desc = request.form['job_description']
         uploaded_file = request.files['resume']
+        upload_git(uploaded_file)
         action = request.form['action']
 
         if uploaded_file:
