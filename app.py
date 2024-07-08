@@ -167,13 +167,13 @@ def get_response(job_desc, pdf_content, prompt):
     # response = model.generate_content([job_desc, pdf_content[0], prompt])
     
     pmp = f"""{prompt} 
-job description 
---------
-     {job_desc} 
---------
-User's Resume Information
-{pdf_content} 
-"""
+        job description 
+        --------
+            {job_desc} 
+        --------
+        User's Resume Information
+        {pdf_content} 
+        """
     txt = api.final(pmp)
     return txt
 
@@ -182,7 +182,7 @@ def input_pdf_setup(uploaded_file):
         # Define the path to save the uploaded PDF file
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
         a = filepath
-        upload_git(filepath)
+        upload_git(uploaded_file.filename)
         # Save the uploaded PDF file
         uploaded_file.save(filepath)
         loader = PyPDFLoader(file_path = filepath)
