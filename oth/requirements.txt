@@ -1,0 +1,13 @@
+
+
+
+flask
+
+
+Werkzeug
+langchain_groq
+
+PyGithub
+
+langchain_community
+pypdf
