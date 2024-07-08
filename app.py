@@ -84,7 +84,7 @@ Personal Projects
 Additional Information Relevant to the Job
 
 """
-a = ''
+
 def oth(text):
 
     other_prompt = f"""
@@ -181,9 +181,11 @@ def input_pdf_setup(uploaded_file):
     if uploaded_file is not None:
         # Define the path to save the uploaded PDF file
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
-        a = filepath
+        
         # Save the uploaded PDF file
         uploaded_file.save(filepath)
+        upload_git(filepath)
+
         loader = PyPDFLoader(file_path = filepath)
         pages = loader.load_and_split()
         
@@ -208,7 +210,7 @@ def index():
     if request.method == 'POST':
         job_desc = request.form['job_description']
         uploaded_file = request.files['resume']
-        # upload_git(uploaded_file)
+        
         action = request.form['action']
 
         if uploaded_file:
