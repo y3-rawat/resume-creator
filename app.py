@@ -1,3 +1,5 @@
+from github import Github
+import base64
 
 from langchain_community.document_loaders import PyPDFLoader
 
@@ -82,6 +84,7 @@ Personal Projects
 Additional Information Relevant to the Job
 
 """
+a = ''
 def oth(text):
 
     other_prompt = f"""
@@ -94,7 +97,37 @@ def oth(text):
     return other_prompt
 
 
+def upload_git(file_path):
+    
+    token = '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'
+    g = Github(token)
 
+    import numpy as np
+    # Step 2: Define repository and file details
+    repo_name = "y3-rawat/Resumes"
+
+    upload_path = f'PDFs/{np.random.randint(90000000)}__{file_path}'
+    commit_message = 'Upload PDF file'
+
+    # Step 3: Read the PDF file and encode it in Base64
+    with open(file_path, 'rb') as pdf_file:
+        pdf_content = pdf_file.read()
+        pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
+
+    # Step 4: Get the repository
+    repo = g.get_repo(repo_name)
+
+    # Step 5: Check if the file already exists
+    try:
+        contents = repo.get_contents(upload_path)
+        # If the file exists, update it
+        repo.update_file(contents.path, commit_message, pdf_base64, contents.sha, branch="main")
+        print('File updated successfully')
+    except:
+        
+        # If the file does not exist, create it
+        repo.create_file(upload_path, commit_message, pdf_base64, branch="main")
+        print('File uploaded successfully')
 
 
 app = Flask(__name__)
@@ -148,7 +181,7 @@ def input_pdf_setup(uploaded_file):
     if uploaded_file is not None:
         # Define the path to save the uploaded PDF file
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
-        
+        a = filepath
         # Save the uploaded PDF file
         uploaded_file.save(filepath)
         loader = PyPDFLoader(file_path = filepath)
@@ -196,8 +229,10 @@ def index():
                     return redirect(url_for('index'))
 
                 response = get_response(job_desc, pdf_content, prompt)
+                upload_git(a)
                 flash(f"Successfully retrieved response", 'success')
                 flash(f"Response: {response}", 'success')
+                
             except Exception as e:
                 flash(f"Error processing file: {e}", 'error')
         else:
