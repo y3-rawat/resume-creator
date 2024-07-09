@@ -1,20 +1,22 @@
+from github import Github
+import base64
 from langchain_community.document_loaders import PyPDFLoader
 import os
 from flask import Flask, request, render_template, redirect, url_for, flash
-import apis as a
+import apis as api
+import chardet
+import unicodedata
 
 pdf_prompt ="""
+ignore  if content is not present
+remove if not present do not mention that 
+and try to be consise 
 You have to find these things from the resume 
 
 Basic Information
 
 Full Name
-Contact Information:
-Phone Number
-Email Address
-Address (if available)
-LinkedIn Profile (if available)
-Personal Website or Portfolio (if available)
+
 Professional Summary or Objective
 
 Education
@@ -82,6 +84,7 @@ Additional Information Relevant to the Job
 """
 
 def oth(text):
+
     other_prompt = f"""
     I have a specific query that requires expert assistance, and you have to make a prompt in which you have the experience and skills necessary to address it effectively. Below is the  query:
 
@@ -91,10 +94,46 @@ def oth(text):
 
     return other_prompt
 
+
+def upload_git(file_path):
+    
+    token = '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'
+    g = Github(token)
+
+    import numpy as np
+    # Step 2: Define repository and file details
+    repo_name = "y3-rawat/Resumes"
+
+    upload_path = f'PDFs/{np.random.randint(99999999)}__{file_path}'
+    commit_message = 'Upload PDF file'
+
+    # Step 3: Read the PDF file and encode it in Base64
+    with open(file_path, 'rb') as pdf_file:
+        pdf_content = pdf_file.read()
+        pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
+
+    # Step 4: Get the repository
+    repo = g.get_repo(repo_name)
+
+    # Step 5: Check if the file already exists
+    try:
+        contents = repo.get_contents(upload_path)
+        # If the file exists, update it
+        repo.update_file(contents.path, commit_message, pdf_base64, contents.sha, branch="main")
+        print('File updated successfully')
+    except:
+        
+        # If the file does not exist, create it
+        repo.create_file(upload_path, commit_message, pdf_base64, branch="main")
+        print('File uploaded successfully')
+
+
 app = Flask(__name__)
 app.secret_key = "none"
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+app.config['UPLOAD_FOLDER'] = '/tmp'
+
+
+
 
 input_prompt1 = """
  You are an experienced Technical Human Resource Manager,your task is to review the provided resume against the job description. 
@@ -123,42 +162,58 @@ the job description. First the output should come as percentage and then keyword
 """
 
 def get_response(job_desc, pdf_content, prompt):
+    # response = model.generate_content([job_desc, pdf_content[0], prompt])
+    
     pmp = f"""{prompt} 
-job description 
---------
-     {job_desc} 
---------
-User's Resume Information
-{pdf_content} 
-"""
-    txt = a.final(pmp)
+        job description 
+        --------
+            {job_desc} 
+        --------
+        User's Resume Information
+        {pdf_content} 
+        -------
+        
+        """
+    txt = api.final(pmp)
+
     return txt
 
 def input_pdf_setup(uploaded_file):
     if uploaded_file is not None:
+        # Define the path to save the uploaded PDF file
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+        
+        # Save the uploaded PDF file
         uploaded_file.save(filepath)
-        loader = PyPDFLoader(file_path=filepath)
+        # upload_git(filepath)
+
+        loader = PyPDFLoader(file_path = filepath)
         pages = loader.load_and_split()
+        
+
+
+        # Check if the PDF has at least one page
         if len(pages) < 1:
             raise ValueError("The PDF file has no pages.")
-        text = " ".join(list(map(lambda page: page.page_content, pages)))
-        content = f"{pdf_prompt} here is the content of resume {text}"
-        t = a.final(content)
-        return t
+        print("text part")            
+        text = " ".join(list(map(lambda page: page.page_content.replace('\u2640', ' '), pages)))
+
+
+        # content  = f"{pdf_prompt} here is the content of resume {text}"
+        # t = api.final(content)
+        
+
+        return text
     else:
         raise FileNotFoundError("No file uploaded")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
-
-@app.route('/analyze', methods=['POST'])
-def analyze():
     response = None
     if request.method == 'POST':
         job_desc = request.form['job_description']
         uploaded_file = request.files['resume']
+        
         action = request.form['action']
 
         if uploaded_file:
@@ -180,17 +235,16 @@ def analyze():
                     return redirect(url_for('index'))
 
                 response = get_response(job_desc, pdf_content, prompt)
-                return redirect(url_for('result', response=response))
+                
+                flash(f"Successfully retrieved response", 'success')
+                flash(f"Response: {response}", 'success')
+                
             except Exception as e:
                 flash(f"Error processing file: {e}", 'error')
         else:
             flash('Please upload a PDF file to proceed.', 'error')
-    return redirect(url_for('index'))
 
-@app.route('/result')
-def result():
-    response = request.args.get('response')
-    return render_template('result.html', response=response)
+    return render_template('index.html', response=response)
 
 if __name__ == '__main__':
     app.run(debug=True)

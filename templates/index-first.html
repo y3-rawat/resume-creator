@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="app-container" id="app-container">
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            margin-top: -5%;
+            margin-bottom: 4%;
+        }
+    </style>
+
+    <div class="page{% if not response %} active{% endif %}" id="input-page">
+        <div class="card input-card">
+            <h2 class="card-title">Upload Resume & Job Description</h2>
+            <form method="POST" enctype="multipart/form-data" id="upload-form" onsubmit="return showLoader()">
+                <div class="form-group">
+                    <label for="job_description">Job Description:</label>
+                    <textarea class="form-control" id="job_description" name="job_description" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="resume">Upload your resume (PDF):</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="resume" name="resume" accept=".pdf" required onchange="updateFileName()">
+                        <label for="resume" class="file-input-label" id="file-input-label">
+                            <span id="file-input-text" class="file-input-text">Choose file</span>
+                            <span class="file-input-button-a">Upload</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary" name="action" value="tell_me">Analyze Resume</button>
+                    <button type="submit" class="btn btn-info" name="action" value="improvise">Suggest Improvements</button>
+                    <button type="submit" class="btn btn-success" name="action" value="keywords">Missing Keywords</button>
+                    <button type="submit" class="btn btn-warning" name="action" value="percentage">Match Percentage</button>
+                    
+                    
+                    
+                </div>
+                
+                
+                <div class="form-group">
+                    <div style="height: 10px;"></div>
+                    
+                    <label for="query">Custom Query (Optional):</label>
+                    <input type="text" class="form-control" id="query" name="query" placeholder="Ask a specific question...">
+                </div>
+                <button type="submit" class="btn btn-secondary btn-last" name="action" value="query">Answer Query</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="page{% if response %} active{% endif %}" id="result-page">
+        <h1 class="main-title">Analysis Results</h1>
+        <div class="card result-card">
+            <div class="result-content">
+                {% if response %}
+                    {% for line in response.split('\n') %}
+                        {% if line.startswith('##') %}
+                            <h2 class="result-header">{{ line.strip('#') }}</h2>
+                        {% elif '**' in line %}
+                            {% set parts = line.split('**') %}
+                            <p class="result-line">
+                                {% for part in parts %}
+                                    {% if loop.index is odd %}
+                                        {{ part }}
+                                    {% else %}
+                                        <strong>{{ part }}</strong>
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                        {% else %}
+                            <p class="result-line">{{ line }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p class="no-result">No analysis results yet. Please upload a resume and job description to get started.</p>
+                {% endif %}
+            </div>
+        </div>
+        <button class="btn btn-primary" id="back-button">Back to Upload</button>
+        
+    </div>
+</div>
+
+<!-- Loader Element -->
+<div class="banter-loader" id="loader">
+    <div class="banter-loader__box"></div>
+    <div class="banter-loader__box"></div>
+    <div class="banter-loader__box"></div>
+    <div class="banter-loader__box"></div>
+    <div class="banter-loader__box"></div>
+    <div class="banter-loader__box"></div>
+    <div class="banter-loader__box"></div>
+    <div class="banter-loader__box"></div>
+    <div class="banter-loader__box"></div>
+</div>
+
+<script>
+    function showLoader() {
+        document.getElementById('loader').style.display = 'block';
+        document.getElementById('app-container').classList.add('blur-background');
+        return true; // Allow form submission
+    }
+
+    document.getElementById('back-button').addEventListener('click', function() {
+        document.getElementById('result-page').classList.remove('active');
+        document.getElementById('input-page').classList.add('active');
+    });
+
+    function updateFileName() {
+        var input = document.getElementById('resume');
+        var fileName = input.files[0].name;
+        document.getElementById('file-input-text').textContent = fileName;
+    }
+</script>
+{% endblock %}

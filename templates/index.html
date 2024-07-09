@@ -1,120 +1,275 @@
-{% extends "layout.html" %}
-
-{% block content %}
-
-<div class="app-container" id="app-container">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Expert</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #4285f4;
+            --text-color: #202124;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        
         .container {
+            max-width: 800px;
+            margin: 50px auto;
+        }
+        
+        .app-container {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(66, 133, 244, 0.25);
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .file-input-label {
+            background-color: #f0f4ff;
+            border: 2px dashed var(--secondary-color);
+            border-radius: 10px;
+            padding: 20px;
             display: flex;
+            align-items: center;
             justify-content: center;
-            margin-top: -5%;
-            margin-bottom: 4%;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            color: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .file-input-label:hover {
+            background-color: #e6eeff;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            
+        }
+        
+        .btn-primary:hover {
+            background-color: #218ffc;
+            border-color: #0f5bc4;
+            color: black;
+        }
+        
+        .btn-info {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: #ffffff;
+        }
+        
+        .btn-info:hover {
+            background-color: #3b78e7;
+            border-color: #3b78e7;
+        }
+        
+        .btn-success {
+            background-color: #3b78e7;
+            border-color: #3b78e7;
+        }
+        
+        .btn-success:hover {
+            background-color: #218ffc;
+            border-color: #0f5bc4;
+            color: black;
+        }
+        
+        .btn-warning {
+            background-color: #3b78e7;
+            border-color: #3b78e7;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #218ffc;
+            border-color: #0f5bc4;
+            color: black;
+        }
+        
+        .custom-query {
+            margin-top: 30px;
+        }
+        
+        .input-group .btn {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        
+        #loader {
+            display: none;
+            width: 100px;
+            height: 100px;
+            margin: auto;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        .banter-loader__box {
+            width: 20px;
+            height: 20px;
+            background-color: #4285f4;
+            float: left;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .blur-background {
+            filter: blur(5px);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
         }
     </style>
-
-    <div class="page{% if not response %} active{% endif %}" id="input-page">
-        <div class="card input-card">
-            <h2 class="card-title">Upload Resume & Job Description</h2>
-            <form method="POST" enctype="multipart/form-data" id="upload-form" onsubmit="return showLoader()">
-                <div class="form-group">
-                    <label for="job_description">Job Description:</label>
-                    <textarea class="form-control" id="job_description" name="job_description" rows="5" required></textarea>
+</head>
+<body>
+    <div class="container">
+        <div class="app-container">
+            <h1 class="main-title">ATS Resume Analyzer</h1>
+            <form method="POST" action="{{ url_for('analyze') }}" enctype="multipart/form-data" id="upload-form" onsubmit="return showLoader()">
+                <div class="mb-4">
+                    <label for="job_description" class="form-label">Job Description:</label>
+                    <textarea class="form-control" id="job_description" name="job_description" rows="5" required placeholder="Paste the job description here..."></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="resume">Upload your resume (PDF):</label>
+
+                <div class="mb-4">
+                    <label for="resume" class="form-label">Upload your resume (PDF):</label>
                     <div class="file-input-wrapper">
-                        <input type="file" id="resume" name="resume" accept=".pdf" required onchange="updateFileName()">
-                        <label for="resume" class="file-input-label" id="file-input-label">
-                            <span id="file-input-text" class="file-input-text">Choose file</span>
-                            <span class="file-input-button-a">Upload</span>
+                        <input type="file" id="resume"  name="resume" accept=".pdf" required onchange="updateFileName()">
+                        <label for="resume" class="file-input-label">
+                            <i class="fas fa-cloud-upload-alt me-2"></i>
+                            <span id="file-input-text">Drag & Drop or Click to Upload</span>
                         </label>
                     </div>
                 </div>
                 
                 <div class="action-buttons">
-                    <button type="submit" class="btn btn-primary" name="action" value="tell_me">Analyze Resume</button>
-                    <button type="submit" class="btn btn-info" name="action" value="improvise">Suggest Improvements</button>
-                    <button type="submit" class="btn btn-success" name="action" value="keywords">Missing Keywords</button>
-                    <button type="submit" class="btn btn-warning" name="action" value="percentage">Match Percentage</button>
-                    
-                    
-                    
+                    <button type="submit" class="btn btn-primary" name="action" value="tell_me"><i class="fas fa-search me-2"></i>Analyze Resume</button>
+                    <button type="submit" class="btn btn-info" name="action" value="improvise"><i class="fas fa-lightbulb me-2"></i>Suggest Improvements</button>
+                    <button type="submit" class="btn btn-success" name="action" value="keywords"><i class="fas fa-key me-2"></i>Missing Keywords</button>
+                    <button type="submit" class="btn btn-warning" name="action" value="percentage"><i class="fas fa-percentage me-2"></i>Match Percentage</button>
                 </div>
                 
-                
-                <div class="form-group">
-                    <div style="height: 10px;"></div>
-                    
-                    <label for="query">Custom Query (Optional):</label>
-                    <input type="text" class="form-control" id="query" name="query" placeholder="Ask a specific question...">
+                <div class="custom-query">
+                    <label for="query" class="form-label">Custom Query:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="query" name="query" placeholder="Ask a specific question...">
+                        <button type="submit" class="btn btn-secondary" name="action" value="query"><i class="fas fa-question-circle me-2"></i>Answer Query</button>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-secondary btn-last" name="action" value="query">Answer Query</button>
             </form>
         </div>
     </div>
 
-    <div class="page{% if response %} active{% endif %}" id="result-page">
-        <h1 class="main-title">Analysis Results</h1>
-        <div class="card result-card">
-            <div class="result-content">
-                {% if response %}
-                    {% for line in response.split('\n') %}
-                        {% if line.startswith('##') %}
-                            <h2 class="result-header">{{ line.strip('#') }}</h2>
-                        {% elif '**' in line %}
-                            {% set parts = line.split('**') %}
-                            <p class="result-line">
-                                {% for part in parts %}
-                                    {% if loop.index is odd %}
-                                        {{ part }}
-                                    {% else %}
-                                        <strong>{{ part }}</strong>
-                                    {% endif %}
-                                {% endfor %}
-                            </p>
-                        {% else %}
-                            <p class="result-line">{{ line }}</p>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <p class="no-result">No analysis results yet. Please upload a resume and job description to get started.</p>
-                {% endif %}
-            </div>
-        </div>
-        <button class="btn btn-primary" id="back-button">Back to Upload</button>
-        
+    <!-- Loader Element -->
+    <div class="banter-loader" id="loader">
+        <div class="banter-loader__box"></div>
+        <div class="banter-loader__box"></div>
+        <div class="banter-loader__box"></div>
+        <div class="banter-loader__box"></div>
+        <div class="banter-loader__box"></div>
+        <div class="banter-loader__box"></div>
+        <div class="banter-loader__box"></div>
+        <div class="banter-loader__box"></div>
+        <div class="banter-loader__box"></div>
     </div>
-</div>
 
-<!-- Loader Element -->
-<div class="banter-loader" id="loader">
-    <div class="banter-loader__box"></div>
-    <div class="banter-loader__box"></div>
-    <div class="banter-loader__box"></div>
-    <div class="banter-loader__box"></div>
-    <div class="banter-loader__box"></div>
-    <div class="banter-loader__box"></div>
-    <div class="banter-loader__box"></div>
-    <div class="banter-loader__box"></div>
-    <div class="banter-loader__box"></div>
-</div>
+    <script>
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+            document.querySelector('.app-container').classList.add('blur-background');
+            return true; // Allow form submission
+        }
 
-<script>
-    function showLoader() {
-        document.getElementById('loader').style.display = 'block';
-        document.getElementById('app-container').classList.add('blur-background');
-        return true; // Allow form submission
-    }
+        document.getElementById('back-button').addEventListener('click', function() {
+            document.getElementById('result-page').classList.remove('active');
+            document.querySelector('.app-container').classList.remove('blur-background');
+        });
 
-    document.getElementById('back-button').addEventListener('click', function() {
-        document.getElementById('result-page').classList.remove('active');
-        document.getElementById('input-page').classList.add('active');
-    });
-
-    function updateFileName() {
-        var input = document.getElementById('resume');
-        var fileName = input.files[0].name;
-        document.getElementById('file-input-text').textContent = fileName;
-    }
-</script>
-{% endblock %}
+        function updateFileName() {
+            var input = document.getElementById('resume');
+            var fileName = input.files[0].name;
+            document.getElementById('file-input-text').textContent = fileName;
+        }
+    </script>
+</body>
+</html>
