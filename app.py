@@ -152,7 +152,10 @@ def input_pdf_setup(uploaded_file):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
-
+@app.route('/result')
+def result():
+    response = request.args.get('response')
+    return render_template('result.html', response=response)
 @app.route('/analyze', methods=['POST'])
 def analyze():
     response = None
@@ -187,10 +190,7 @@ def analyze():
             flash('Please upload a PDF file to proceed.', 'error')
     return redirect(url_for('index'))
 
-@app.route('/result')
-def result():
-    response = request.args.get('response')
-    return render_template('result.html', response=response)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
