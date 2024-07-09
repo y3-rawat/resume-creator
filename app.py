@@ -152,6 +152,7 @@ def input_pdf_setup(uploaded_file):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
+
 @app.route('/result')
 def result():
     response = request.args.get('response')
