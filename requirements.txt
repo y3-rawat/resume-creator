@@ -11,4 +11,3 @@ PyGithub
 
 langchain_community
 pypdf
-chardet
