@@ -93,7 +93,7 @@ def oth(text):
 
 app = Flask(__name__)
 app.secret_key = "none"
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = '/tmp'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 input_prompt1 = """
