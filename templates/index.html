@@ -12,6 +12,7 @@
             --primary-color: #1a73e8;
             --secondary-color: #4285f4;
             --text-color: #202124;
+            --higru: #ff5722; /* Example color for the loader circles */
         }
         
         body {
@@ -171,7 +172,7 @@
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
         }
-        
+
         .loader {
             display: none;
             width: 100px;
@@ -184,7 +185,7 @@
         }
 
         .ci1 {
-            fill: var(--primary-color);
+            fill: var(--higru);
             animation: toBig 3s infinite -1.5s;
             transform-box: fill-box;
             transform-origin: 50% 50%;
@@ -197,7 +198,7 @@
         }
 
         .ci2 {
-            fill: var(--secondary-color);
+            fill: var(--higru);
             animation: toBig2 3s infinite;
             transform-box: fill-box;
             transform-origin: 50% 50%;
