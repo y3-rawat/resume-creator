@@ -181,17 +181,13 @@
             height: 100%;
             background-color: rgba(255, 255, 255, 0.7);
             z-index: 9999;
+            justify-content: center;
+            align-items: center;
         }
 
         .loader {
-            display: none;
             width: 100px;
             height: 100px;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 9999;
         }
 
         .ci1 {
@@ -357,39 +353,39 @@
             </div>
         </div>
     </div>
-<div id="loader" class="loader">
-    <svg viewBox="0 0 100 100" class="loader">
-        <g class="points"> 
-          <circle fill="#fff" r="50" cy="50" cx="50" class="ciw"></circle>
-        <circle r="4" cy="50" cx="5" class="ci2"></circle>
-        <circle r="4" cy="50" cx="95" class="ci1"></circle>
-        </g>
-    </svg>
-</div>
+    <div id="loader">
+        <svg viewBox="0 0 100 100" class="loader">
+            <g class="points"> 
+                <circle fill="#fff" r="50" cy="50" cx="50" class="ciw"></circle>
+                <circle r="4" cy="50" cx="5" class="ci2"></circle>
+                <circle r="4" cy="50" cx="95" class="ci1"></circle>
+            </g>
+        </svg>
+    </div>
  
     
-<script>
-    function showLoader() {
-        document.getElementById('loader').style.display = 'flex';
-        document.querySelector('.app-container').classList.add('blur-background');
-        return true; // Allow form submission
-    }
+    <script>
+        function showLoader() {
+            document.getElementById('loader').style.display = 'flex';
+            document.querySelector('.app-container').classList.add('blur-background');
+            return true; // Allow form submission
+        }
 
-    // Add event listeners to all submit buttons
-    document.querySelectorAll('button[type="submit"]').forEach(button => {
-        button.addEventListener('click', showLoader);
-    });
+        // Add event listeners to all submit buttons
+        document.querySelectorAll('button[type="submit"]').forEach(button => {
+            button.addEventListener('click', showLoader);
+        });
 
-    function updateFileName() {
-        var input = document.getElementById('resume');
-        var fileName = input.files[0].name;
-        document.getElementById('file-input-text').textContent = fileName;
-    }
+        function updateFileName() {
+            var input = document.getElementById('resume');
+            var fileName = input.files[0].name;
+            document.getElementById('file-input-text').textContent = fileName;
+        }
 
-    // Logout button functionality
-    document.getElementById('logout-button').addEventListener('click', function() {
-        window.location.href = 'https://c2c-jobs.vercel.app';
-    });
-</script>
+        // Logout button functionality
+        document.getElementById('logout-button').addEventListener('click', function() {
+            window.location.href = 'https://c2c-jobs.vercel.app';
+        });
+    </script>
 </body>
 </html>
