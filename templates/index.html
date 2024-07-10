@@ -344,18 +344,20 @@
             <div class="mt-4 text-end">
                 <button  id="logout-button" class="btn btn-danger"><i class="fas fa-sign-out-alt me-2"></i>
 
-              <a href="https://c2c-jobs.vercel.app/">Logout</a></button>
+              <a style="color: #e0e0e0;" href="https://c2c-jobs.vercel.app/">Logout</a></button>
             </div>
         </div>
     </div>
-
-    <svg viewBox="0 0 100 100" class="loader" id="loader">
+<div id="loader">
+    <svg viewBox="0 0 100 100" class="loader" >
         <g class="points"> 
           <circle fill="#fff" r="50" cy="50" cx="50" class="ciw"></circle>
         <circle r="4" cy="50" cx="5" class="ci2"></circle>
         <circle r="4" cy="50" cx="95" class="ci1"></circle>
         </g>
         </svg>
+</div>
+ 
     <script>
         function showLoader() {
             document.getElementById('loader').style.display = 'block';
