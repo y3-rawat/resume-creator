@@ -30,6 +30,12 @@
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             padding: 40px;
+            position: relative;
+        }
+        
+        .blur-background {
+            filter: blur(5px);
+            pointer-events: none;
         }
         
         .main-title {
@@ -166,142 +172,135 @@
             border-bottom-left-radius: 0;
         }
         
-    
-
-
-
-
-
-
-
-
-
-
         .loader {
-  width: 200px;
-  max-height: 900px;
-  transform-origin: 50% 50%;
-  overflow: visible;
-}
+            display: none;
+            width: 100px;
+            height: 100px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
 
-.ci1 {
-  fill: var(--higru);
-  animation: toBig 3s infinite -1.5s;
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-}
+        .ci1 {
+            fill: var(--primary-color);
+            animation: toBig 3s infinite -1.5s;
+            transform-box: fill-box;
+            transform-origin: 50% 50%;
+        }
 
-.ciw {
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-  animation: breath 3s infinite;
-}
+        .ciw {
+            transform-box: fill-box;
+            transform-origin: 50% 50%;
+            animation: breath 3s infinite;
+        }
 
-.ci2 {
-  fill: var(--higru);
-  animation: toBig2 3s infinite;
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-}
+        .ci2 {
+            fill: var(--secondary-color);
+            animation: toBig2 3s infinite;
+            transform-box: fill-box;
+            transform-origin: 50% 50%;
+        }
 
-.points {
-  animation: rot 3s infinite;
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-}
+        .points {
+            animation: rot 3s infinite;
+            transform-box: fill-box;
+            transform-origin: 50% 50%;
+        }
 
-@keyframes rot {
-  0% {
-    transform: rotate(0deg);
-  }
+        @keyframes rot {
+            0% {
+                transform: rotate(0deg);
+            }
 
-  30% {
-    transform: rotate(360deg);
-  }
+            30% {
+                transform: rotate(360deg);
+            }
 
-  50% {
-    transform: rotate(360deg);
-  }
+            50% {
+                transform: rotate(360deg);
+            }
 
-  80% {
-    transform: rotate(0deg);
-  }
+            80% {
+                transform: rotate(0deg);
+            }
 
-  100% {
-    transform: rotate(0deg);
-  }
-}
+            100% {
+                transform: rotate(0deg);
+            }
+        }
 
-@keyframes toBig {
-  0% {
-    transform: scale(1) translateX(0px);
-  }
+        @keyframes toBig {
+            0% {
+                transform: scale(1) translateX(0px);
+            }
 
-  30% {
-    transform: scale(1) translateX(0px);
-  }
+            30% {
+                transform: scale(1) translateX(0px);
+            }
 
-  50% {
-    transform: scale(10) translateX(-4.5px);
-  }
+            50% {
+                transform: scale(10) translateX(-4.5px);
+            }
 
-  80% {
-    transform: scale(10) translateX(-4.5px);
-  }
+            80% {
+                transform: scale(10) translateX(-4.5px);
+            }
 
-  100% {
-    transform: scale(1) translateX(0px);
-  }
-}
+            100% {
+                transform: scale(1) translateX(0px);
+            }
+        }
 
-@keyframes toBig2 {
-  0% {
-    transform: scale(1) translateX(0px);
-  }
+        @keyframes toBig2 {
+            0% {
+                transform: scale(1) translateX(0px);
+            }
 
-  30% {
-    transform: scale(1) translateX(0px);
-  }
+            30% {
+                transform: scale(1) translateX(0px);
+            }
 
-  50% {
-    transform: scale(10) translateX(4.5px);
-  }
+            50% {
+                transform: scale(10) translateX(4.5px);
+            }
 
-  80% {
-    transform: scale(10) translateX(4.5px);
-  }
+            80% {
+                transform: scale(10) translateX(4.5px);
+            }
 
-  100% {
-    transform: scale(1) translateX(0px);
-  }
-}
+            100% {
+                transform: scale(1) translateX(0px);
+            }
+        }
 
-@keyframes breath {
-  15% {
-    transform: scale(1);
-  }
+        @keyframes breath {
+            15% {
+                transform: scale(1);
+            }
 
-  40% {
-    transform: scale(1.1);
-  }
+            40% {
+                transform: scale(1.1);
+            }
 
-  65% {
-    transform: scale(1);
-  }
+            65% {
+                transform: scale(1);
+            }
 
-  90% {
-    transform: scale(1.1);
-  }
-}
+            90% {
+                transform: scale(1.1);
+            }
+        }
 
-.dwf, .share {
-  position: fixed;
-  bottom: 4px;
-  right: 10px;
-  background-color: #0003;
-  padding: 3px;
-  border-radius: 3px;
-}
+        .dwf, .share {
+            position: fixed;
+            bottom: 4px;
+            right: 10px;
+            background-color: #0003;
+            padding: 3px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
@@ -343,19 +342,18 @@
             <!-- Logout Button -->
             <div class="mt-4 text-end">
                 <button  id="logout-button" class="btn btn-danger"><i class="fas fa-sign-out-alt me-2"></i>
-
               <a style="color: #e0e0e0;" href="https://c2c-jobs.vercel.app/">Logout</a></button>
             </div>
         </div>
     </div>
 <div id="loader">
-    <svg viewBox="0 0 100 100" class="loader" >
+    <svg viewBox="0 0 100 100" class="loader">
         <g class="points"> 
           <circle fill="#fff" r="50" cy="50" cx="50" class="ciw"></circle>
         <circle r="4" cy="50" cx="5" class="ci2"></circle>
         <circle r="4" cy="50" cx="95" class="ci1"></circle>
         </g>
-        </svg>
+    </svg>
 </div>
  
     <script>
@@ -364,11 +362,6 @@
             document.querySelector('.app-container').classList.add('blur-background');
             return true; // Allow form submission
         }
-
-        document.getElementById('back-button').addEventListener('click', function() {
-            document.getElementById('result-page').classList.remove('active');
-            document.querySelector('.app-container').classList.remove('blur-background');
-        });
 
         function updateFileName() {
             var input = document.getElementById('resume');
