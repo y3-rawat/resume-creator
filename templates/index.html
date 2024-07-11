@@ -105,9 +105,15 @@
         
         .action-buttons {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
             gap: 15px;
             margin-top: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .action-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         .btn {
