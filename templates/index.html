@@ -107,7 +107,7 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 15px;
-            
+
             margin-top: 30px;
         }
         
@@ -374,23 +374,31 @@
     </div>
  
     
-    <script>
+     <script>
+        function validateForm() {
+            var jobDescription = document.getElementById('job_description').value.trim();
+            var resumeFile = document.getElementById('resume').files[0];
+            
+            if (jobDescription === '' || !resumeFile) {
+                alert('Please fill in the job description and upload a resume before submitting.');
+                return false;
+            }
+            
+            showLoader();
+            return true;
+        }
+
         function showLoader() {
             document.getElementById('loader').style.display = 'flex';
             document.querySelector('.app-container').classList.add('blur-background');
-            return true; // Allow form submission
         }
-
-        // Add event listeners to all submit buttons
-        document.querySelectorAll('button[type="submit"]').forEach(button => {
-            button.addEventListener('click', showLoader);
-        });
 
         function updateFileName() {
             var input = document.getElementById('resume');
-            var fileName = input.files[0].name;
+            var fileName = input.files[0] ? input.files[0].name : 'Drag & Drop or Click to Upload';
             document.getElementById('file-input-text').textContent = fileName;
         }
+
 
         // Logout button functionality
         document.getElementById('logout-button').addEventListener('click', function() {
