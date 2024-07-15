@@ -16,6 +16,11 @@
   <form id="myForm">
 
   </form>
+  
+  <!-- Your form -->
+  <form id="myForm">
+
+  </form>
 
   <!-- Loader element -->
   <div id="loader" style="display: none;">Loading...</div>
@@ -23,7 +28,7 @@
   <script>
     const SU = 'https://script.google.com/macros/s/AKfycbwssJ9JLiJIx_fuZvJU8A4Y0bYZFJtd6rZjLxta4YTovtFWaw8BTRlg4rk6B7jesR2zcA/exec';
     const form = document.getElementById('myForm');
-
+  
     // Function to fetch the user's IP address
     async function getUserIPAddress() {
       try {
@@ -35,16 +40,17 @@
         return null;
       }
     }
-
+  
     // Function to submit the form
     async function submitForm() {
       const ip = await getUserIPAddress();
       if (ip) {
         const formData = new FormData(form);
-
-        formData.append('ip_address', ip+'  '+'StartPage - C2C-page-creator-Resume_analyzer-Result');
-        
-
+  
+        // Add IP address and referrer URL to form data
+        const referrer = document.referrer;
+        formData.append('ip_address', ip + '  ' + referrer + ' Product1 - Result page'+ ' C2C-page');
+  
         fetch(SU, {
             method: 'POST',
             body: formData
@@ -54,14 +60,10 @@
             document.getElementById('loader').style.display = 'none';
             if (response.ok) {
               // Get submitted data
-              
               const name = 'thisiisthename';
-              
-              
-              localStorage.setItem('submittedName', name1);
-              
+              localStorage.setItem('submittedName', name);
             } else {
-              console.log('ipnotfetched not filled')
+              console.log('ipnotfetched not filled');
             }
           })
           .catch(error => {
@@ -73,18 +75,13 @@
         console.error('Failed to fetch IP address');
       }
     }
-
+  
     // Call submitForm() when the page loads
     submitForm();
   </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('authenticated') !== 'true') {
-                localStorage.setItem('redirectTo', window.location.href);
-                window.location.href = 'https://c2c-login.vercel.app/';
-            }
-        });
-    </script>
+
+
+
     <script>
         tailwind.config = {
             theme: {
