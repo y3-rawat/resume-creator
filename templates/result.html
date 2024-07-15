@@ -77,7 +77,14 @@
     // Call submitForm() when the page loads
     submitForm();
   </script>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('authenticated') !== 'true') {
+                localStorage.setItem('redirectTo', window.location.href);
+                window.location.href = 'https://c2c-login.vercel.app/';
+            }
+        });
+    </script>
     <script>
         tailwind.config = {
             theme: {
