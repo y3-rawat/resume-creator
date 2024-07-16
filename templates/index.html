@@ -447,29 +447,17 @@
     
      <script>
         function validateForm() {
-    var jobDescription = document.getElementById('job_description').value.trim();
-    var resumeFile = document.getElementById('resume').files[0];
-    
-    if (jobDescription === '') {
-        alert('Please fill in the job description before submitting.');
-        return false;
-    }
-    
-    if (!resumeFile) {
-        alert('Please upload a resume before submitting.');
-        return false;
-    }
-    
-    if (!resumeFile.name.toLowerCase().endsWith('.pdf')) {
-        alert('Please upload a PDF file for the resume.');
-        return false;
-    }
-    
-    showLoader();
-    return true;
-}
-
-document.getElementById('upload-form').onsubmit = validateForm;
+            var jobDescription = document.getElementById('job_description').value.trim();
+            var resumeFile = document.getElementById('resume').files[0];
+            
+            if (jobDescription === '' || !resumeFile) {
+                alert('Please fill in the job description and upload a resume before submitting.');
+                return false;
+            }
+            
+            showLoader();
+            return true;
+        }
 
         function showLoader() {
             document.getElementById('loader').style.display = 'flex';
