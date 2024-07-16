@@ -404,7 +404,13 @@
                 <div class="mb-4">
                     <label for="resume" class="form-label">Upload your resume (PDF):</label>
                     <div class="file-input-wrapper">
-                        <input type="file" id="resume"  name="resume" accept=".pdf" required onchange="updateFileName()">
+                        <input type="file" id="resume" name="resume" accept=".pdf" required>
+                        <script>
+                            document.getElementById('resume').addEventListener('change', function(e) {
+                                var fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+                                console.log('File selected:', fileName);
+                            });
+                            </script>
                         <label for="resume" class="file-input-label">
                             <i class="fas fa-cloud-upload-alt me-2"></i>
                             <span id="file-input-text">Drag & Drop or Click to Upload</span>
