@@ -406,9 +406,19 @@
                     <div class="file-input-wrapper">
                         <input type="file" id="resume" name="resume" accept=".pdf" required>
                         <script>
-                            document.getElementById('resume').addEventListener('change', function(e) {
-                                var fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
-                                console.log('File selected:', fileName);
+                                                        document.addEventListener('DOMContentLoaded', function() {
+                                const fileInput = document.getElementById('resume');
+                                const fileInputText = document.getElementById('file-input-text');
+
+                                fileInput.addEventListener('change', function(e) {
+                                    const fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+                                    fileInputText.textContent = fileName;
+                                    console.log('File selected:', fileName);
+                                });
+
+                                // Remove or replace this part if 'name1' is not needed
+                                // const name = 'thisiisthename';
+                                // localStorage.setItem('submittedName', name); // Changed 'name1' to 'name'
                             });
                             </script>
                         <label for="resume" class="file-input-label">
