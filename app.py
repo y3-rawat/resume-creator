@@ -3,83 +3,6 @@ import os
 from flask import Flask, request, render_template, redirect, url_for, flash
 import apis as a
 
-pdf_prompt ="""
-You have to find these things from the resume 
-
-Basic Information
-
-Full Name
-Contact Information:
-Phone Number
-Email Address
-Address (if available)
-LinkedIn Profile (if available)
-Personal Website or Portfolio (if available)
-Professional Summary or Objective
-
-Education
-
-Degree(s) Obtained
-Field(s) of Study
-Institution(s) Attended
-Graduation Date(s)
-Academic Achievements or Honors
-Work Experience
-
-Job Title(s)
-Company Name(s)
-Location(s)
-Employment Dates
-Key Responsibilities and Achievements
-Technologies and Tools Used
-Skills
-
-Technical Skills
-Soft Skills
-Certifications and Licenses
-Projects
-
-Project Title(s)
-Description of Projects
-Technologies and Tools Used
-Role in the Project
-Awards and Honors
-
-Award Title(s)
-Issuing Organization
-Date of Award
-Professional Development
-
-Certifications
-Training Programs
-Workshops and Seminars
-Publications and Research
-
-Publication Titles
-Journal or Conference Name
-Date of Publication
-Co-authors (if any)
-Professional Affiliations
-
-Membership in Professional Organizations
-Leadership Roles in Professional Organizations
-Languages
-
-Languages Known
-Proficiency Level
-References
-
-Reference Name(s)
-Contact Information
-Relationship to the Candidate
-Additional Sections
-
-Volunteer Experience
-Hobbies and Interests
-Personal Projects
-Additional Information Relevant to the Job
-
-"""
 
 def oth(text):
     other_prompt = f"""
@@ -143,9 +66,7 @@ def input_pdf_setup(uploaded_file):
         if len(pages) < 1:
             raise ValueError("The PDF file has no pages.")
         text = " ".join(list(map(lambda page: page.page_content, pages)))
-        content = f"{pdf_prompt} here is the content of resume {text}"
-        # t = a.final(text)
-        # print("resume ",t)
+        
         return text
     else:
         raise FileNotFoundError("No file uploaded")
