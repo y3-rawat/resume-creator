@@ -145,6 +145,7 @@ def input_pdf_setup(uploaded_file):
         text = " ".join(list(map(lambda page: page.page_content, pages)))
         content = f"{pdf_prompt} here is the content of resume {text}"
         t = a.final(content)
+        print("resume ",t)
         return t
     else:
         raise FileNotFoundError("No file uploaded")
@@ -182,9 +183,8 @@ def analyze():
                 else:
                     flash('Invalid action selected', 'error')
                     return redirect(url_for('index'))
-
-                response = get_response(job_desc, pdf_content, prompt)
-                return redirect(url_for('result', response=response))
+                # response = get_response(job_desc, pdf_content, prompt)
+                return redirect(url_for('result', response="response"))
             except Exception as e:
                 flash(f"Error processing file: {e}", 'error')
         else:
@@ -193,7 +193,9 @@ def analyze():
 
 @app.route('/result')
 def result():
+
     response = request.args.get('response')
+    print(response,"  responce ")
     return render_template('result.html', response=response)
 
 if __name__ == '__main__':
