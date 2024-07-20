@@ -19,17 +19,17 @@ def update_file(new_content, fpth):
         print("under database")
         file_content = repo.get_contents(fpth, ref=branch)
         decoded_content = base64.b64decode(file_content.content).decode('utf-8')
-        existing_content = json.loads(decoded_content)
+        # existing_content = json.loads(decoded_content)
 
-        # Ensure new_content is a dictionary
-        if isinstance(new_content, str):
-            new_content = json.loads(new_content)
+        # # Ensure new_content is a dictionary
+        # if isinstance(new_content, str):
+        #     new_content = json.loads(new_content)
 
         # Update the existing content with new content
-        existing_content.update(new_content)
+        # existing_content.update(new_content)
         
         new_content_str = json.dumps(existing_content, indent=4)  # Convert the dictionary to a formatted string
-        repo.update_file(fpth, "COMMIT_MESSAGE", new_content_str, file_content.sha)
+        repo.update_file(fpth, "COMMIT_MESSAGE", new_content)
         print("File updated successfully!")
 
     except github.GithubException as e:
