@@ -24,7 +24,7 @@ def read_users():
 def write_users(job_desc, pdf_content, filepath, prompt, response):
     try:
         # Format the data as a comma-separated string
-        formatted_data = f"{job_desc[:100]},{pdf_content[:100]},{filepath},{prompt[:100]},{response[:100]}"
+        formatted_data = f"''{job_desc}'',''{pdf_content}'',''{filepath}'',''{prompt}'',''{response}''"
         
         print("Uploading data:", formatted_data)
 
