@@ -18,25 +18,33 @@ import new_d
 
 from github import Github, InputGitAuthor
 import base64
+import os
+from langchain_community.document_loaders import PyPDFLoader
+from github import Github, InputGitAuthor
+import base64
+import time
 
-def upload_text_to_github(text_content, filename, token, repo, max_retries=3, retry_delay=5):
+def upload_file_to_github(file_path, token, repo, max_retries=3, retry_delay=5):
     g = Github(token)
     repository = g.get_repo(repo)
     author = InputGitAuthor("Your Name", "your_email@example.com")
 
-    # Encode the text content in base64
-    content = base64.b64encode(text_content.encode('utf-8')).decode('utf-8')
+    # Read the file content and encode it in base64
+    with open(file_path, 'rb') as file:
+        content = base64.b64encode(file.read()).decode('utf-8')
+
+    file_name = os.path.basename(file_path)
 
     for _ in range(max_retries):
         try:
             # Check if the file already exists
             try:
-                contents = repository.get_contents(filename)
+                contents = repository.get_contents(file_name)
                 # If the file exists, update it
                 repository.update_file(contents.path, "Update file", content, contents.sha, author=author)
             except:
                 # If the file does not exist, create it
-                repository.create_file(filename, "Create file", content, author=author)
+                repository.create_file(file_name, "Create file", content, author=author)
             return True
         except Exception as e:
             print(f"Error uploading to GitHub: {str(e)}")
@@ -44,7 +52,35 @@ def upload_text_to_github(text_content, filename, token, repo, max_retries=3, re
     
     return False
 
-
+def input_pdf_setup(uploaded_file, app):
+    if uploaded_file is not None:
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+        uploaded_file.save(filepath)
+        
+        # Upload the PDF file to GitHub
+        success = upload_file_to_github(
+            file_path=filepath,
+            token='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',
+            repo='company2candidate/Resume_data',
+            max_retries=3,
+            retry_delay=5
+        )
+        
+        if success:
+            print(f"Successfully uploaded {uploaded_file.filename} to GitHub")
+        else:
+            print(f"Failed to upload {uploaded_file.filename} to GitHub after retries")
+        
+        # Extract text from PDF for further processing
+        loader = PyPDFLoader(file_path=filepath)
+        pages = loader.load_and_split()
+        if len(pages) < 1:
+            raise ValueError("The PDF file has no pages.")
+        text = " ".join(list(map(lambda page: page.page_content, pages)))
+        
+        return text, filepath
+    else:
+        raise FileNotFoundError("No file uploaded")
 # Helper function to read users from JSON file
 def read_users():
     j = database.get_file(User_DB_Path)
