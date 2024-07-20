@@ -1,8 +1,54 @@
-from flask import Flask, request, render_template, redirect, url_for, flash
-import os
-import threading
+import requests
+import base64
+import time
+from requests.exceptions import RequestException
+
+from new_d import upload_text_to_github
 from langchain_community.document_loaders import PyPDFLoader
+import os
+from flask import Flask, request, render_template, redirect, url_for, flash
 import apis as a
+import json
+import threading
+
+
+
+
+
+# Helper function to read users from JSON file
+def read_users():
+    j = database.get_file(User_DB_Path)
+    return json.loads(j)
+
+
+def write_users(job_desc, pdf_content, filepath, prompt, response):
+    try:
+        # Format the data as a comma-separated string
+        formatted_data = f"''{job_desc}'',''{pdf_content}'',''{filepath}'',''{prompt}'',''{response}''"
+        
+        print("Uploading data:", formatted_data)
+
+        success = upload_text_to_github(
+            new_content=formatted_data)
+        
+        if success:
+            print("GitHub update successful")
+        else:
+            print("GitHub update failed after retries")
+
+    except Exception as e:
+        print(f"Error in write_users: {str(e)}")
+
+
+def oth(text):
+    other_prompt = f"""
+    I have a specific query that requires expert assistance, and you have to make a prompt in which you have the experience and skills necessary to address it effectively. Below is the query:
+
+    {text}
+
+    I am seeking a solution that is not only theoretically sound but also practical and actionable. Given your expertise in solving similar queries, I would appreciate it if you could provide a comprehensive response, including any necessary steps, resources, or considerations to ensure the solution works effectively in a real-world scenario.
+    """
+    return other_prompt
 
 app = Flask(__name__)
 app.secret_key = "none"
@@ -35,17 +81,7 @@ your task is to evaluate the resume against the provided job description. Give m
 the job description. First the output should come as percentage and then keywords missing and last final thoughts.
 """
 
-def oth(text):
-    other_prompt = f"""
-    I have a specific query that requires expert assistance, and you have to make a prompt in which you have the experience and skills necessary to address it effectively. Below is the query:
-
-    {text}
-
-    I am seeking a solution that is not only theoretically sound but also practical and actionable. Given your expertise in solving similar queries, I would appreciate it if you could provide a comprehensive response, including any necessary steps, resources, or considerations to ensure the solution works effectively in a real-world scenario.
-    """
-    return other_prompt
-
-def get_response(job_desc, pdf_content, filepath, prompt):
+def get_response(job_desc, pdf_content,filepath, prompt):
     pmp = f"""{prompt} 
     job description 
     --------
@@ -66,7 +102,7 @@ def input_pdf_setup(uploaded_file):
         pages = loader.load_and_split()
         if len(pages) < 1:
             raise ValueError("The PDF file has no pages.")
-        text = " ".join([page.page_content for page in pages])
+        text = " ".join(list(map(lambda page: page.page_content, pages)))
         return text, filepath
     else:
         raise FileNotFoundError("No file uploaded")
@@ -81,6 +117,7 @@ def page_not_found(e):
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
+    response = None
     if request.method == 'POST':
         job_desc = request.form['job_description']
         uploaded_file = request.files['resume']
@@ -104,7 +141,10 @@ def analyze():
                     flash('Invalid action selected', 'error')
                     return redirect(url_for('index'))
                 
-                response = get_response(job_desc, pdf_content, filepath, prompt)
+                response = get_response(job_desc, pdf_content, filepath,prompt)
+                
+                # Start a new thread to write users in the background
+                
                 
                 return redirect(url_for('result', response=response))
                 
