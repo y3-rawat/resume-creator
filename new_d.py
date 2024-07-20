@@ -8,7 +8,7 @@ repo = 'company2candidate/Resume_data'
 branch_name = 'main'
 commit_msg = 'Append new text content'
 
-def upload_text_to_github( new_content):
+def upload_text_to_github(new_content):
     print("calling from upload_text to github")
     file_path = 'Res_d.txt'
     # Prepare headers
