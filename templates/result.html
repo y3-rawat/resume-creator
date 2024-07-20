@@ -44,7 +44,7 @@
         const currentUrl = window.location.href;
   
         // Add IP address, referrer URL, and current URL to form data
-        formData.append('ip_address', ip + '  ' + 'product1-Result_page  ' + referrer);
+        formData.append('ip_address', ip + '  ' + 'product1-Result_page result ' + referrer);
         formData.append('current_url', currentUrl);
   
         fetch(SU, {
