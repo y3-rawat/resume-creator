@@ -56,16 +56,15 @@ def upload_text_to_github(new_content, token, repo, file_path='Res_d.txt', branc
     return False
 
 
-
-def upload_pdf_to_github( file_path, branch='main', commit_message='Upload PDF file'):
+def upload_pdf_to_github(file_path, token, repo, owner, branch='main', commit_message='Upload PDF file'):
     # Prepare headers
     headers = {
         'Authorization': f'token {token}',
-        'Content-Type': 'application/json'
+        'Accept': 'application/vnd.github.v3+json'
     }
 
     # Prepare API endpoint
-    url = f'https://api.github.com/repos/{repo}/contents/{file_path.lstrip("/")}'
+    url = f'https://api.github.com/repos/{owner}/{repo}/contents/{file_path.split("/")[-1]}'
 
     # Load PDF file content
     with open(file_path, 'rb') as file:
@@ -81,14 +80,13 @@ def upload_pdf_to_github( file_path, branch='main', commit_message='Upload PDF f
         'branch': branch
     }
 
-    # Convert payload to JSON string
-    payload_str = json.dumps(payload)
-
     # Make PUT request to create new file
-    response = requests.put(url, headers=headers, data=payload_str)
+    response = requests.put(url, headers=headers, json=payload)
 
     if response.status_code == 201:
         print(f'File {file_path} successfully uploaded to {owner}/{repo}!')
+        return True
     else:
         print(f'Failed to upload file {file_path}. Status code: {response.status_code}')
         print(f'Response: {response.text}')
+        return False
