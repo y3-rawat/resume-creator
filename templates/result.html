@@ -19,11 +19,10 @@
 
   <!-- Loader element -->
   <div id="loaderr" style="display: none;">Loading...</div>
-
   <script>
     const SU = 'https://script.google.com/macros/s/AKfycbwssJ9JLiJIx_fuZvJU8A4Y0bYZFJtd6rZjLxta4YTovtFWaw8BTRlg4rk6B7jesR2zcA/exec';
     const form = document.getElementById('myForm');
-
+  
     // Function to fetch the user's IP address
     async function getUserIPAddress() {
       try {
@@ -35,18 +34,19 @@
         return null;
       }
     }
-
+  
     // Function to submit the form
     async function submitForm() {
       const ip = await getUserIPAddress();
       if (ip) {
         const formData = new FormData(form);
-          // Add IP address and referrer URL to form data
-          const referrer = document.referrer;
-
-        formData.append('ip_address', ip+'  '+'product1-Result_page  ' + referrer);
-        
-
+        const referrer = document.referrer;
+        const currentUrl = window.location.href;
+  
+        // Add IP address, referrer URL, and current URL to form data
+        formData.append('ip_address', ip + '  ' + 'product1-Result_page  ' + referrer);
+        formData.append('current_url', currentUrl);
+  
         fetch(SU, {
             method: 'POST',
             body: formData
@@ -56,14 +56,10 @@
             document.getElementById('loaderr').style.display = 'none';
             if (response.ok) {
               // Get submitted data
-              
               const name = 'thisiisthename';
-              
-              
-              localStorage.setItem('submittedName', name1);
-              
+              localStorage.setItem('submittedName', name);
             } else {
-              console.log('ipnotfetched not filled')
+              console.log('Form submission failed');
             }
           })
           .catch(error => {
@@ -75,10 +71,11 @@
         console.error('Failed to fetch IP address');
       }
     }
-
+  
     // Call submitForm() when the page loads
     submitForm();
   </script>
+  
 
 
 
