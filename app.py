@@ -23,7 +23,7 @@ def read_users():
 def write_users(job_desc, pdf_content, filepath, prompt, response):
     format_json = {
         "Job Description": job_desc,
-        "PDF Content": pdf_content,
+        "PDF Content": pdf_content[:21],
         "File Path": filepath,
         "Prompt": prompt,
         "Response": response[:43]
