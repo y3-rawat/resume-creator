@@ -1,22 +1,26 @@
-import os
-import json
-import threading
-import time
-import base64
 from flask import Flask, request, render_template, redirect, url_for, flash
 from langchain_community.document_loaders import PyPDFLoader
 from github import Github, InputGitAuthor
+import os
+import json
+import base64
+import time
 import apis as a
 
 app = Flask(__name__)
-app.secret_key = "none"
-app.config['UPLOAD_FOLDER'] = '/tmp'
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+app.secret_key = os.environ.get("SECRET_KEY", "fallback_secret_key")
+
+# Vercel uses /tmp for writable storage
+UPLOAD_FOLDER = '/tmp'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def upload_file_to_github(file_path, token, repo, max_retries=3, retry_delay=5):
     g = Github(token)
     repository = g.get_repo(repo)
-    author = InputGitAuthor("Your Name", "your_email@example.com")
+    author = InputGitAuthor(
+        os.environ.get("GITHUB_AUTHOR_NAME", "Your Name"),
+        os.environ.get("GITHUB_AUTHOR_EMAIL", "your_email@example.com")
+    )
 
     with open(file_path, 'rb') as file:
         content = base64.b64encode(file.read()).decode('utf-8')
@@ -39,12 +43,12 @@ def upload_file_to_github(file_path, token, repo, max_retries=3, retry_delay=5):
 
 def input_pdf_setup(uploaded_file):
     if uploaded_file is not None:
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, uploaded_file.filename)
         uploaded_file.save(filepath)
         
         success = upload_file_to_github(
             file_path=filepath,
-            token='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',
+            token=os.environ.get('GITHUB_TOKEN'),
             repo='company2candidate/Resume_data',
             max_retries=3,
             retry_delay=5
@@ -150,5 +154,9 @@ def result():
     response = request.args.get('response')
     return render_template('result.html', response=response)
 
+# For local development
 if __name__ == '__main__':
     app.run(debug=True)
+
+# For Vercel
+from vercel_app import app
