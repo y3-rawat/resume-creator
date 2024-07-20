@@ -1,3 +1,4 @@
+from new_d import upload_text_to_github
 from langchain_community.document_loaders import PyPDFLoader
 import os
 from flask import Flask, request, render_template, redirect, url_for, flash
@@ -16,22 +17,26 @@ def read_users():
 
 # Helper function to write users to JSON file
 def write_users(job_desc, pdf_content, filepath, prompt, response):
-    format_json = f"""
-        "Job Description": {job_desc},
-        "PDF Content": {pdf_content[:21]},
-        "File Path": {filepath},
-        "Prompt": {prompt},
-        "Response": {response[:43]}
-        """
+    format_json = f"""{{
+        "Job Description": "{job_desc}",
+        "PDF Content": "{pdf_content[:21]}",
+        "File Path": "{filepath}",
+        "Prompt": "{prompt}",
+        "Response": "{response[:43]}"
+    }}"""
     
     print("users", format_json)
 
-    new_d.upload_text_to_github(format_json)
+    success = upload_text_to_github(
+        new_content=format_json,
+        token='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',
+        repo='company2candidate/Resume_data'
+    )
     
-    print("updated")
-
-
-
+    if success:
+        print("GitHub update successful")
+    else:
+        print("GitHub update failed")
 
 def oth(text):
     other_prompt = f"""
