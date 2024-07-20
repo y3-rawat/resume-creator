@@ -443,6 +443,8 @@
 }
     </style>
 </head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script> <!-- Include pdf-lib -->
+
 <body>
     <div class="container">
         <button id="howToUseBtn" class="btn btn-secondary how-to-use-btn">
@@ -461,7 +463,21 @@
                     <div class="file-input-wrapper">
                         <input type="file" id="resume" name="resume" accept=".pdf" required>
                         <script>
-                                                        document.addEventListener('DOMContentLoaded', function() {
+                             const fileInput = document.querySelector('#file-upload');
+
+                                fileInput.addEventListener('change', async (event) => {
+                                    const file = event.target.files[0];
+                                    if (file && file.type === 'application/pdf') {
+                                        const arrayBuffer = await file.arrayBuffer();
+                                        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+                                        const pageCount = pdfDoc.getPageCount();
+                                        if (pageCount > 3) {
+                                            alert('Please upload a PDF with 3 or fewer pages.');
+                                            fileInput.value = ''; // Clear the file input
+                                        }
+                                    }
+                                });
+                                document.addEventListener('DOMContentLoaded', function() {
                                 const fileInput = document.getElementById('resume');
                                 const fileInputText = document.getElementById('file-input-text');
 
