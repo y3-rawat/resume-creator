@@ -14,6 +14,36 @@ import threading
 import new_d
 
 
+from github import Github, InputGitAuthor
+import base64
+
+def upload_file_to_github(file_path, token, repo, max_retries=3, retry_delay=5):
+    g = Github(token)
+    repository = g.get_repo(repo)
+    author = InputGitAuthor("Your Name", "your_email@example.com")
+
+    # Read the file content and encode it in base64
+    with open(file_path, 'rb') as file:
+        content = base64.b64encode(file.read()).decode('utf-8')
+
+    file_name = os.path.basename(file_path)
+
+    for _ in range(max_retries):
+        try:
+            # Check if the file already exists
+            contents = repository.get_contents(file_name)
+            # If the file exists, update it
+            repository.update_file(contents.path, "Update file", content, contents.sha, author=author)
+            return True
+        except:
+            # If the file does not exist, create it
+            repository.create_file(file_name, "Create file", content, author=author)
+            return True
+        
+        time.sleep(retry_delay)
+    
+    return False
+
 
 # Helper function to read users from JSON file
 def read_users():
@@ -24,12 +54,12 @@ def read_users():
 def write_users(job_desc, pdf_content, filepath, prompt, response):
     try:
         # Format the data as a comma-separated string
-        formatted_data = f"''{job_desc[:100]}'',''{pdf_content[:100]}'',''{filepath}'',''{prompt[:100]}'',''{response[:100]}''"
+        formatted_data = f"'{job_desc[:100]}','{pdf_content[:100]}','{filepath}','{prompt[:100]}','{response[:100]}'"
         
         print("Uploading data:", formatted_data)
 
-        success = upload_text_to_github(
-            new_content=formatted_data,
+        success = upload_file_to_github(
+            file_path=filepath,
             token='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',
             repo='company2candidate/Resume_data',
             max_retries=3,
@@ -43,8 +73,6 @@ def write_users(job_desc, pdf_content, filepath, prompt, response):
 
     except Exception as e:
         print(f"Error in write_users: {str(e)}")
-
-
 def oth(text):
     other_prompt = f"""
     I have a specific query that requires expert assistance, and you have to make a prompt in which you have the experience and skills necessary to address it effectively. Below is the query:
