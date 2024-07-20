@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, flash
 import os
-import json
+import threading
 from langchain_community.document_loaders import PyPDFLoader
 import apis as a
 
@@ -35,6 +35,16 @@ your task is to evaluate the resume against the provided job description. Give m
 the job description. First the output should come as percentage and then keywords missing and last final thoughts.
 """
 
+def oth(text):
+    other_prompt = f"""
+    I have a specific query that requires expert assistance, and you have to make a prompt in which you have the experience and skills necessary to address it effectively. Below is the query:
+
+    {text}
+
+    I am seeking a solution that is not only theoretically sound but also practical and actionable. Given your expertise in solving similar queries, I would appreciate it if you could provide a comprehensive response, including any necessary steps, resources, or considerations to ensure the solution works effectively in a real-world scenario.
+    """
+    return other_prompt
+
 def get_response(job_desc, pdf_content, filepath, prompt):
     pmp = f"""{prompt} 
     job description 
@@ -56,7 +66,7 @@ def input_pdf_setup(uploaded_file):
         pages = loader.load_and_split()
         if len(pages) < 1:
             raise ValueError("The PDF file has no pages.")
-        text = " ".join(list(map(lambda page: page.page_content, pages)))
+        text = " ".join([page.page_content for page in pages])
         return text, filepath
     else:
         raise FileNotFoundError("No file uploaded")
@@ -71,7 +81,6 @@ def page_not_found(e):
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    response = None
     if request.method == 'POST':
         job_desc = request.form['job_description']
         uploaded_file = request.files['resume']
