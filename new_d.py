@@ -1,3 +1,6 @@
+import requests
+import json
+import base64
 
 def upload_text_to_github(file_path, new_content, branch='main', commit_message='Append text content'):
     # Prepare headers
