@@ -1,8 +1,15 @@
 import requests
 import json
 import base64
+token = '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'
+repo = 'company2candidate/Resume_data'
 
-def upload_text_to_github(file_path, new_content, branch='main', commit_message='Append text content'):
+# Optionally, specify branch and commit message
+branch_name = 'main'
+commit_msg = 'Append new text content'
+
+def upload_text_to_github( new_content):
+    file_path = 'Res_d.txt'
     # Prepare headers
     headers = {
         'Authorization': f'token {token}',
@@ -24,7 +31,7 @@ def upload_text_to_github(file_path, new_content, branch='main', commit_message=
         return
 
     # Step 2: Append the new text content to the existing content
-    combined_content = existing_content + '\n' + new_content
+    combined_content = existing_content + ',\n' + new_content
 
     # Step 3: Encode the combined content to Base64
     encoded_content = base64.b64encode(combined_content.encode('utf-8')).decode('utf-8')
@@ -48,6 +55,9 @@ def upload_text_to_github(file_path, new_content, branch='main', commit_message=
     else:
         print(f'Failed to update file {file_path}. Status code: {response.status_code}')
         print(f'Response: {response.text}')
+
+
+
 
 def upload_pdf_to_github( file_path, branch='main', commit_message='Upload PDF file'):
     # Prepare headers

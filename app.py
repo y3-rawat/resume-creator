@@ -3,7 +3,32 @@ import os
 from flask import Flask, request, render_template, redirect, url_for, flash
 import apis as a
 import json
+import threading
 
+import new_d
+
+
+
+# Helper function to read users from JSON file
+def read_users():
+    j = database.get_file(User_DB_Path)
+    return json.loads(j)
+
+# Helper function to write users to JSON file
+def write_users(job_desc, pdf_content, filepath, prompt, response):
+    format_json = f"""
+        "Job Description": {job_desc},
+        "PDF Content": {pdf_content[:21]},
+        "File Path": {filepath},
+        "Prompt": {prompt},
+        "Response": {response[:43]}
+        """
+    
+    print("users", format_json)
+
+    new_d.upload_text_to_github(format_json)
+    
+    print("updated")
 
 
 
