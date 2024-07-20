@@ -1,3 +1,5 @@
+
+import time
 import requests
 import base64
 import time
@@ -17,30 +19,28 @@ import new_d
 from github import Github, InputGitAuthor
 import base64
 
-def upload_file_to_github(file_path, token, repo, max_retries=3, retry_delay=5):
+def upload_text_to_github(text_content, filename, token, repo, max_retries=3, retry_delay=5):
     g = Github(token)
     repository = g.get_repo(repo)
     author = InputGitAuthor("Your Name", "your_email@example.com")
 
-    # Read the file content and encode it in base64
-    with open(file_path, 'rb') as file:
-        content = base64.b64encode(file.read()).decode('utf-8')
-
-    file_name = os.path.basename(file_path)
+    # Encode the text content in base64
+    content = base64.b64encode(text_content.encode('utf-8')).decode('utf-8')
 
     for _ in range(max_retries):
         try:
             # Check if the file already exists
-            contents = repository.get_contents(file_name)
-            # If the file exists, update it
-            repository.update_file(contents.path, "Update file", content, contents.sha, author=author)
+            try:
+                contents = repository.get_contents(filename)
+                # If the file exists, update it
+                repository.update_file(contents.path, "Update file", content, contents.sha, author=author)
+            except:
+                # If the file does not exist, create it
+                repository.create_file(filename, "Create file", content, author=author)
             return True
-        except:
-            # If the file does not exist, create it
-            repository.create_file(file_name, "Create file", content, author=author)
-            return True
-        
-        time.sleep(retry_delay)
+        except Exception as e:
+            print(f"Error uploading to GitHub: {str(e)}")
+            time.sleep(retry_delay)
     
     return False
 
@@ -126,8 +126,7 @@ def get_response(job_desc, pdf_content,filepath, prompt):
     txt = a.final(pmp)
     threading.Thread(target=write_users, args=(job_desc, pdf_content, filepath, prompt, txt)).start()
     return txt
-
-def input_pdf_setup(uploaded_file):
+def input_pdf_setup(uploaded_file, app):
     if uploaded_file is not None:
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
         uploaded_file.save(filepath)
@@ -136,6 +135,23 @@ def input_pdf_setup(uploaded_file):
         if len(pages) < 1:
             raise ValueError("The PDF file has no pages.")
         text = " ".join(list(map(lambda page: page.page_content, pages)))
+        
+        # Upload the extracted text to GitHub
+        github_filename = f"{os.path.splitext(uploaded_file.filename)[0]}.txt"
+        success = upload_text_to_github(
+            text_content=text,
+            filename=github_filename,
+            token='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',
+            repo='company2candidate/Resume_data',
+            max_retries=3,
+            retry_delay=5
+        )
+        
+        if success:
+            print(f"Successfully uploaded {github_filename} to GitHub")
+        else:
+            print(f"Failed to upload {github_filename} to GitHub after retries")
+        
         return text, filepath
     else:
         raise FileNotFoundError("No file uploaded")
