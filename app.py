@@ -20,10 +20,11 @@ def write_users(job_desc, pdf_content, filepath, prompt, response):
         "PDF Content": pdf_content,
         "File Path": filepath,
         "Prompt": prompt,
-        "Response": response
+        "Response": response[:43]
     }
     print("users", format_json)
     database.update_file(format_json, User_DB_Path)
+    print("updated")
 
 def oth(text):
     other_prompt = f"""

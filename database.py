@@ -16,6 +16,7 @@ import base64
 branch = 'main'
 def update_file(new_content, fpth):
     try:
+        print("under databse")
         file_content = repo.get_contents(fpth, ref=branch)
         decoded_content = base64.b64decode(file_content.content).decode('utf-8')
         c = json.loads(decoded_content)
