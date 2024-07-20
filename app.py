@@ -5,8 +5,7 @@ import apis as a
 import json
 import threading
 
-import database
-User_DB_Path = "Res_d.txt"
+import new_d
 
 job_desc = ""
 pdf_content = ""
@@ -28,9 +27,15 @@ def write_users(job_desc, pdf_content, filepath, prompt, response):
         "Prompt": {prompt},
         "Response": {response[:43]}
     }}"""
+    
     print("users", format_json)
-    database.update_file(format_json, User_DB_Path)
+
+    new_d.upload_text_to_github(format_json)
+    
     print("updated")
+
+
+
 
 def oth(text):
     other_prompt = f"""
