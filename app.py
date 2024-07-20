@@ -11,7 +11,7 @@ import apis as a
 import json
 import threading
 
-import new_d
+
 
 
 
