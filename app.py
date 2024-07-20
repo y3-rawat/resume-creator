@@ -14,7 +14,6 @@ import threading
 
 
 
-
 # Helper function to read users from JSON file
 def read_users():
     j = database.get_file(User_DB_Path)
@@ -26,7 +25,7 @@ def write_users(job_desc, pdf_content, filepath, prompt, response):
         # Format the data as a comma-separated string
         formatted_data = f"''{job_desc}'',''{pdf_content}'',''{filepath}'',''{prompt}'',''{response}''"
         
-        print("Uploading data:", formatted_data)
+        print("Uploading data:", "formatted_data")
 
         success = upload_text_to_github(
             new_content=formatted_data)
