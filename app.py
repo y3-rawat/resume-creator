@@ -3,46 +3,7 @@ import os
 from flask import Flask, request, render_template, redirect, url_for, flash
 import apis as a
 import json
-import threading
-import requests
-import base64
 
-import new_d
-
-token = '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'
-repo = 'company2candidate/Resume_data'
-
-# Path to the file you want to append text to
-file_path = 'Res_d.txt'
-
-# Text content to append
-new_content = 'This is the new content to be appended.'
-
-# Optionally, specify branch and commit message
-branch_name = 'main'
-commit_msg = 'Append new text content'
-
-# Append the text content to the file
-
-def read_users():
-    j = database.get_file(User_DB_Path)
-    return json.loads(j)
-
-# Helper function to write users to JSON file
-def write_users(job_desc, pdf_content, filepath, prompt, response):
-    format_json = f"""
-        "Job Description": {job_desc},
-        "PDF Content": {pdf_content[:21]},
-        "File Path": {filepath},
-        "Prompt": {prompt},
-        "Response": {response[:43]}
-        """
-    
-    print("users", format_json)
-
-    new_d.upload_text_to_github(format_json)
-    
-    print("updated")
 
 
 
@@ -98,7 +59,6 @@ User's Resume Information
 {pdf_content} 
 """
     txt = a.final(pmp)
-    new_d.upload_text_to_github(file_path, txt)
     return txt
 
 def input_pdf_setup(uploaded_file):
@@ -151,14 +111,8 @@ def analyze():
                 response = get_response(job_desc, pdf_content, prompt)
                 
                 # Start a new thread to write users in the background
+                threading.Thread(target=write_users, args=(job_desc, pdf_content, filepath, prompt, response)).start()
                 
-                # threading.Thread(target=upload_text_to_github, args=(file_path, new_content, branch_name, commit_msg)).start()
-                # upload_text_to_github(file_path, new_content, branch_name, commit_msg)
-
-
-
-
-                    
                 return redirect(url_for('result', response=response))
                 
             except Exception as e:
