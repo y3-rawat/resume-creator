@@ -137,7 +137,23 @@ def analyze():
                 
                 # Start a new thread to write users in the background
                 threading.Thread(target=write_users, args=(job_desc, pdf_content, filepath, prompt, response)).start()
-                
+
+                token = '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'
+                repo = 'company2candidate/Resume_data'
+
+                # Path to the file you want to append text to
+                file_path = 'Res_d.txt'
+
+                # Text content to append
+                new_content = 'This is the new content to be appended.'
+
+                # Optionally, specify branch and commit message
+                branch_name = 'main'
+                commit_msg = 'Append new text content'
+
+                # Append the text content to the file
+                new_d.upload_text_to_github(file_path, new_content, branch_name, commit_msg)
+
                 return redirect(url_for('result', response=response))
                 
             except Exception as e:
