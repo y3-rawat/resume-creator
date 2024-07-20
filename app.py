@@ -158,5 +158,3 @@ def result():
 if __name__ == '__main__':
     app.run(debug=True)
 
-# For Vercel
-from vercel_app import app
