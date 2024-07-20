@@ -32,7 +32,7 @@ def upload_text_to_github( new_content):
         return
 
     # Step 2: Append the new text content to the existing content
-    combined_content = existing_content + ',\n' + new_content
+    combined_content = "existing_content + ',\n' + new_content"
 
     # Step 3: Encode the combined content to Base64
     encoded_content = base64.b64encode(combined_content.encode('utf-8')).decode('utf-8')
