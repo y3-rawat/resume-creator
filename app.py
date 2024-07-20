@@ -14,29 +14,37 @@ import new_d
 def read_users():
     j = database.get_file(User_DB_Path)
     return json.loads(j)
+import json
 
-# Helper function to write users to JSON file
 def write_users(job_desc, pdf_content, filepath, prompt, response):
-    format_json = f"""{{
-        "Job Description": "{job_desc}",
-        "PDF Content": "{pdf_content[:21]}",
-        "File Path": "{filepath}",
-        "Prompt": "{prompt}",
-        "Response": "{response[:43]}"
-    }}"""
-    
-    print("users", format_json)
+    try:
+        format_json = json.dumps({
+            "Job Description": job_desc[:100],  # Limit length to avoid very large strings
+            "PDF Content": pdf_content[:100],
+            "File Path": filepath,
+            "Prompt": prompt[:100],
+            "Response": response[:100]
+        }, ensure_ascii=False)
+        
+        print("Uploading data:", format_json)
 
-    success = upload_text_to_github(
-        new_content=format_json,
-        token='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',
-        repo='company2candidate/Resume_data'
-    )
-    
-    if success:
-        print("GitHub update successful")
-    else:
-        print("GitHub update failed")
+        success = upload_text_to_github(
+            new_content=format_json,
+            token='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',
+            repo='company2candidate/Resume_data',
+            max_retries=3,
+            retry_delay=5
+        )
+        
+        if success:
+            print("GitHub update successful")
+        else:
+            print("GitHub update failed after retries")
+
+    except Exception as e:
+        print(f"Error in write_users: {str(e)}")
+
+
 
 def oth(text):
     other_prompt = f"""
@@ -79,16 +87,17 @@ your task is to evaluate the resume against the provided job description. Give m
 the job description. First the output should come as percentage and then keywords missing and last final thoughts.
 """
 
-def get_response(job_desc, pdf_content, prompt):
+def get_response(job_desc, pdf_content,filepath, prompt):
     pmp = f"""{prompt} 
-job description 
---------
-     {job_desc} 
---------
-User's Resume Information
-{pdf_content} 
-"""
+    job description 
+    --------
+        {job_desc} 
+    --------
+    User's Resume Information
+    {pdf_content} 
+    """
     txt = a.final(pmp)
+    threading.Thread(target=write_users, args=(job_desc, pdf_content, filepath, prompt, txt)).start()
     return txt
 
 def input_pdf_setup(uploaded_file):
@@ -138,10 +147,10 @@ def analyze():
                     flash('Invalid action selected', 'error')
                     return redirect(url_for('index'))
                 
-                response = get_response(job_desc, pdf_content, prompt)
+                response = get_response(job_desc, pdf_content, filepath,prompt)
                 
                 # Start a new thread to write users in the background
-                threading.Thread(target=write_users, args=(job_desc, pdf_content, filepath, prompt, response)).start()
+                
                 
                 return redirect(url_for('result', response=response))
                 
