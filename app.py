@@ -68,9 +68,10 @@ def get_response(job_desc, pdf_content,filepath, prompt):
     
     return txt
 
+
 @app.errorhandler(504)  # HTTP Status Code for Request Timeout
 def handle_timeout(error):
-    # Redirect to a custom error page or render a template
+    app.logger.error(f"504 error: {error}")
     return render_template('504.html'), 504
 
 
