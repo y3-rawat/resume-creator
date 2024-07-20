@@ -1,59 +1,8 @@
-import requests
-import base64
-import time
-from requests.exceptions import RequestException
-
-from new_d import upload_text_to_github
-from langchain_community.document_loaders import PyPDFLoader
-import os
 from flask import Flask, request, render_template, redirect, url_for, flash
-import apis as a
+import os
 import json
-import threading
-
-
-
-
-
-# Helper function to read users from JSON file
-def read_users():
-    j = database.get_file(User_DB_Path)
-    return json.loads(j)
-
-
-def write_users(job_desc, pdf_content, filepath, prompt, response):
-    try:
-        # Format the data as a comma-separated string
-        formatted_data = f"''{job_desc}'',''{pdf_content}'',''{filepath}'',''{prompt}'',''{response}''"
-        
-        print("Uploading data:", formatted_data)
-
-        success = upload_text_to_github(
-            new_content=formatted_data,
-            token='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',
-            repo='company2candidate/Resume_data',
-            max_retries=3,
-            retry_delay=5
-        )
-        
-        if success:
-            print("GitHub update successful")
-        else:
-            print("GitHub update failed after retries")
-
-    except Exception as e:
-        print(f"Error in write_users: {str(e)}")
-
-
-def oth(text):
-    other_prompt = f"""
-    I have a specific query that requires expert assistance, and you have to make a prompt in which you have the experience and skills necessary to address it effectively. Below is the query:
-
-    {text}
-
-    I am seeking a solution that is not only theoretically sound but also practical and actionable. Given your expertise in solving similar queries, I would appreciate it if you could provide a comprehensive response, including any necessary steps, resources, or considerations to ensure the solution works effectively in a real-world scenario.
-    """
-    return other_prompt
+from langchain_community.document_loaders import PyPDFLoader
+import apis as a
 
 app = Flask(__name__)
 app.secret_key = "none"
@@ -86,7 +35,7 @@ your task is to evaluate the resume against the provided job description. Give m
 the job description. First the output should come as percentage and then keywords missing and last final thoughts.
 """
 
-def get_response(job_desc, pdf_content,filepath, prompt):
+def get_response(job_desc, pdf_content, filepath, prompt):
     pmp = f"""{prompt} 
     job description 
     --------
@@ -146,10 +95,7 @@ def analyze():
                     flash('Invalid action selected', 'error')
                     return redirect(url_for('index'))
                 
-                response = get_response(job_desc, pdf_content, filepath,prompt)
-                
-                # Start a new thread to write users in the background
-                
+                response = get_response(job_desc, pdf_content, filepath, prompt)
                 
                 return redirect(url_for('result', response=response))
                 
