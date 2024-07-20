@@ -11,6 +11,7 @@ import apis as a
 import json
 import threading
 
+import new_d
 
 
 
@@ -23,12 +24,17 @@ def read_users():
 def write_users(job_desc, pdf_content, filepath, prompt, response):
     try:
         # Format the data as a comma-separated string
-        formatted_data = f"''{job_desc}'',''{pdf_content}'',''{filepath}'',''{prompt}'',''{response}''"
+        formatted_data = f"''{job_desc[:100]}'',''{pdf_content[:100]}'',''{filepath}'',''{prompt[:100]}'',''{response[:100]}''"
         
-        print("Uploading data:", "formatted_data")
+        print("Uploading data:", formatted_data)
 
         success = upload_text_to_github(
-            new_content="formatted_data")
+            new_content=formatted_data,
+            token='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',
+            repo='company2candidate/Resume_data',
+            max_retries=3,
+            retry_delay=5
+        )
         
         if success:
             print("GitHub update successful")
