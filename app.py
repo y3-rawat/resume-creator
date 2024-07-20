@@ -174,7 +174,7 @@ def analyze():
 
         if uploaded_file:
             try:
-                pdf_content, filepath = input_pdf_setup(uploaded_file)
+                pdf_content, filepath = input_pdf_setup(uploaded_file,app)
                 if action == 'tell_me':
                     prompt = input_prompt1
                 elif action == 'improvise':
