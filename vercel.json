@@ -1,9 +1,17 @@
 {
-    "version": 2,
-    "builds": [
-      { "src": "app.py", "use": "@vercel/python" }
-    ],
-    "routes": [
-      { "src": "/(.*)", "dest": "/app.py" }
-    ]
+  "version": 2,
+  "builds": [
+    { "src": "app.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/app.py" }
+  ],
+  "functions": {
+    "api/app.py": {
+      "memory": 512
+    }
+  },
+  "limits": {
+    "maxPayloadSize": "10mb"
   }
+}
