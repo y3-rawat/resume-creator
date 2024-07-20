@@ -28,7 +28,7 @@ def update_file(new_content, fpth):
         # Update the existing content with new content
         # existing_content.update(new_content)
         
-        new_content_str = json.dumps(existing_content, indent=4)  # Convert the dictionary to a formatted string
+        # new_content_str = json.dumps(existing_content, indent=4)  # Convert the dictionary to a formatted string
         repo.update_file(fpth, "COMMIT_MESSAGE", new_content)
         print("File updated successfully!")
 
