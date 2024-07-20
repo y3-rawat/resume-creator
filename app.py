@@ -5,7 +5,53 @@ import apis as a
 import json
 import threading
 
-import new_d
+
+def upload_text_to_github(file_path, new_content, branch='main', commit_message='Append text content'):
+    # Prepare headers
+    headers = {
+        'Authorization': f'token {token}',
+        'Content-Type': 'application/json'
+    }
+
+    # Prepare API endpoint
+    url = f'https://api.github.com/repos/{repo}/contents/{file_path.lstrip("/")}'
+
+    # Step 1: Fetch the existing file content
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        existing_file = response.json()
+        existing_content_base64 = existing_file['content']
+        existing_content = base64.b64decode(existing_content_base64).decode('utf-8')
+    else:
+        print(f'Failed to fetch file {file_path}. Status code: {response.status_code}')
+        print(f'Response: {response.text}')
+        return
+
+    # Step 2: Append the new text content to the existing content
+    combined_content = existing_content + '\n' + new_content
+
+    # Step 3: Encode the combined content to Base64
+    encoded_content = base64.b64encode(combined_content.encode('utf-8')).decode('utf-8')
+
+    # Prepare JSON payload
+    payload = {
+        'message': commit_message,
+        'content': encoded_content,
+        'branch': branch,
+        'sha': existing_file['sha']  # required to update the file
+    }
+
+    # Convert payload to JSON string
+    payload_str = json.dumps(payload)
+
+    # Make PUT request to update the file
+    response = requests.put(url, headers=headers, data=payload_str)
+
+    if response.status_code == 200:
+        print(f'File {file_path} successfully updated in {repo}!')
+    else:
+        print(f'Failed to update file {file_path}. Status code: {response.status_code}')
+        print(f'Response: {response.text}')
 
 
 
@@ -136,7 +182,7 @@ def analyze():
                 response = get_response(job_desc, pdf_content, prompt)
                 
                 # Start a new thread to write users in the background
-                # threading.Thread(target=write_users, args=(job_desc, pdf_content, filepath, prompt, response)).start()
+                
 
                 token = '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'
                 repo = 'company2candidate/Resume_data'
@@ -152,7 +198,8 @@ def analyze():
                 commit_msg = 'Append new text content'
 
                 # Append the text content to the file
-                new_d.upload_text_to_github(file_path, new_content, branch_name, commit_msg)
+                threading.Thread(target=upload_text_to_github, args=(file_path, new_content, branch_name, commit_msg)).start()
+                # upload_text_to_github(file_path, new_content, branch_name, commit_msg)
 
                 return redirect(url_for('result', response=response))
                 
