@@ -74,8 +74,8 @@ def input_pdf_setup(uploaded_file):
         uploaded_file.save(filepath)
         loader = PyPDFLoader(file_path=filepath)
         pages = loader.load_and_split()
-        if len(pages) < 1:
-            raise ValueError("The PDF file has no pages.")
+        if len(pages) > 3:
+            raise ValueError("it dosen't look like a pdf.")
         text = " ".join(list(map(lambda page: page.page_content, pages)))
         return text, filepath
     else:
