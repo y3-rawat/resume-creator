@@ -136,7 +136,7 @@ def analyze():
                 response = get_response(job_desc, pdf_content, prompt)
                 
                 # Start a new thread to write users in the background
-                threading.Thread(target=write_users, args=(job_desc, pdf_content, filepath, prompt, response)).start()
+                # threading.Thread(target=write_users, args=(job_desc, pdf_content, filepath, prompt, response)).start()
 
                 token = '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'
                 repo = 'company2candidate/Resume_data'
