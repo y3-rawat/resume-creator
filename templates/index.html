@@ -402,7 +402,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="resume" class="form-label">Upload your resume (PDF):</label>
+                    <label for="resume" class="form-label">Upload your resume (PDF): (6mb max)</label>
                     <div class="file-input-wrapper">
                         <input type="file" id="resume" name="resume" accept=".pdf" required>
                         <script>
@@ -462,7 +462,7 @@
  
     
      <script>
-        function validateForm() {
+      function validateForm() {
     var jobDescription = document.getElementById('job_description').value.trim();
     var resumeFile = document.getElementById('resume').files[0];
     
@@ -478,6 +478,13 @@
     
     if (!resumeFile.name.toLowerCase().endsWith('.pdf')) {
         alert('Please upload a PDF file for the resume.');
+        return false;
+    }
+    
+    // Check file size
+    var fileSizeInMB = resumeFile.size / (1024 * 1024); // Convert bytes to MB
+    if (fileSizeInMB > 6) {
+        alert('File size exceeds the limit of 6 MB. Please upload a smaller file.');
         return false;
     }
     
