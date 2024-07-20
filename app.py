@@ -68,6 +68,12 @@ def get_response(job_desc, pdf_content,filepath, prompt):
     
     return txt
 
+@app.errorhandler(408)  # HTTP Status Code for Request Timeout
+def handle_timeout(error):
+    # Redirect to a custom error page or render a template
+    return render_template('404.html'), 408
+
+
 def input_pdf_setup(uploaded_file):
     if uploaded_file is not None:
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
