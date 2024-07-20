@@ -7,11 +7,7 @@ import threading
 
 import new_d
 
-job_desc = ""
-pdf_content = ""
-filepath = ""
-prompt = ""
-response = ""
+
 
 # Helper function to read users from JSON file
 def read_users():
