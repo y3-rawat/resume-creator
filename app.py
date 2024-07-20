@@ -24,6 +24,7 @@ def write_users(job_desc, pdf_content, filepath, prompt, response):
     "Response": "{response}"
 }}
 """
+    print("users", format_json)
     database.update_file(format_json, User_DB_Path)
 
 def oth(text):
