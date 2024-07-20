@@ -8,6 +8,12 @@ import threading
 import database
 User_DB_Path = "Res_d.json"
 
+job_desc = ""
+pdf_content = ""
+filepath = ""
+prompt = ""
+response = ""
+
 # Helper function to read users from JSON file
 def read_users():
     j = database.get_file(User_DB_Path)

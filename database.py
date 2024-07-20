@@ -19,11 +19,11 @@ def update_file(new_content, fpth):
         print("under databse")
         file_content = repo.get_contents(fpth, ref=branch)
         decoded_content = base64.b64decode(file_content.content).decode('utf-8')
-        c = json.loads(decoded_content)
-        c.update(new_content)
+        
+        new_con = f"{decoded_content} {new_content}"
         print("updateing file")
-        new_content_str = json.dumps(c)  # Convert the dictionary to a string
-        repo.update_file(fpth, "COMMIT_MESSAGE", new_content_str, file_content.sha)
+        # new_content_str = json.dumps(c)  # Convert the dictionary to a string
+        repo.update_file(fpth, "COMMIT_MESSAGE", new_con, file_content.sha)
         print("File updated successfully!")
 
     except github.GithubException as e:
