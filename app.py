@@ -6,7 +6,7 @@ import json
 import threading
 
 import database
-User_DB_Path = "Res_d.json"
+User_DB_Path = "Resd.json"
 
 # Helper function to read users from JSON file
 def read_users():
@@ -16,14 +16,14 @@ def read_users():
 # Helper function to write users to JSON file
 def write_users(job_desc, pdf_content, filepath, prompt, response):
     format_json = f"""
-{{
-    "Job Description": "{job_desc}",
-    "PDF Content": "{pdf_content}",
-    "File Path": "{filepath}",
-    "Prompt": "{prompt}",
-    "Response": "{response}"
-}}
-"""
+        {{
+            "Job Description": "{job_desc}",
+            "PDF Content": "{pdf_content}",
+            "File Path": "{filepath}",
+            "Prompt": "{prompt}",
+            "Response": "{response}"
+        }}
+        """
     print("users", format_json)
     database.update_file(format_json, User_DB_Path)
 

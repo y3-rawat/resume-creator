@@ -23,6 +23,7 @@ def update_file(new_content, fpth):
         new_content_str = json.dumps(c)  # Convert the dictionary to a string
         repo.update_file(fpth, "COMMIT_MESSAGE", new_content_str, file_content.sha)
         print("File updated successfully!")
+        
     except github.GithubException as e:
         if e.status == 404:
             # File does not exist, create it
