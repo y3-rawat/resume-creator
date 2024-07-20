@@ -6,7 +6,7 @@ import json
 import threading
 
 import database
-User_DB_Path = "Res_d.json"
+User_DB_Path = "Res_d.txt"
 
 job_desc = ""
 pdf_content = ""
