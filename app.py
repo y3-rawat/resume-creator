@@ -51,10 +51,10 @@ def read_users():
     return json.loads(j)
 
 
-def write_users(job_desc, pdf_content, filepath, prompt, response):
+def write_users(job_desc, pdf_content, filepath, prompt, txt):
     try:
         # Format the data as a comma-separated string
-        formatted_data = f"'{job_desc[:100]}','{pdf_content[:100]}','{filepath}','{prompt[:100]}','{response[:100]}'"
+        formatted_data = f"'{job_desc[:100]}','{pdf_content[:100]}','{filepath}','{prompt[:100]}','{txt[:100]}'"
         
         print("Uploading data:", formatted_data)
 
