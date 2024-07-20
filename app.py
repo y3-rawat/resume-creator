@@ -20,13 +20,13 @@ def read_users():
 
 # Helper function to write users to JSON file
 def write_users(job_desc, pdf_content, filepath, prompt, response):
-    format_json = """{{
+    format_json = f"""{{
         "Job Description": {job_desc},
         "PDF Content": {pdf_content[:21]},
         "File Path": {filepath},
         "Prompt": {prompt},
-        "Response": {response[:43]}
-    }}"""
+        "Response": {response[:43]}}
+    }"""
     
     print("users", format_json)
 
