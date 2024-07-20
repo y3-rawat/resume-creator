@@ -28,7 +28,7 @@ def write_users(job_desc, pdf_content, filepath, prompt, response):
         print("Uploading data:", "formatted_data")
 
         success = upload_text_to_github(
-            new_content=formatted_data)
+            new_content="formatted_data")
         
         if success:
             print("GitHub update successful")
