@@ -10,8 +10,5 @@
     "api/app.py": {
       "memory": 512
     }
-  },
-  "limits": {
-    "maxPayloadSize": "10mb"
   }
 }
