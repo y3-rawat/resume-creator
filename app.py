@@ -6,6 +6,21 @@ import json
 import threading
 
 
+
+token = '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'
+repo = 'company2candidate/Resume_data'
+
+# Path to the file you want to append text to
+file_path = 'Res_d.txt'
+
+# Text content to append
+new_content = 'This is the new content to be appended.'
+
+# Optionally, specify branch and commit message
+branch_name = 'main'
+commit_msg = 'Append new text content'
+
+# Append the text content to the file
 def upload_text_to_github(file_path, new_content, branch='main', commit_message='Append text content'):
     # Prepare headers
     headers = {
@@ -183,21 +198,6 @@ def analyze():
                 
                 # Start a new thread to write users in the background
                 
-
-                token = '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'
-                repo = 'company2candidate/Resume_data'
-
-                # Path to the file you want to append text to
-                file_path = 'Res_d.txt'
-
-                # Text content to append
-                new_content = 'This is the new content to be appended.'
-
-                # Optionally, specify branch and commit message
-                branch_name = 'main'
-                commit_msg = 'Append new text content'
-
-                # Append the text content to the file
                 threading.Thread(target=upload_text_to_github, args=(file_path, new_content, branch_name, commit_msg)).start()
                 # upload_text_to_github(file_path, new_content, branch_name, commit_msg)
 
