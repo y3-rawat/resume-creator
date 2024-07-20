@@ -7,6 +7,7 @@ import threading
 import requests
 import base64
 
+import new_d
 
 token = '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'
 repo = 'company2candidate/Resume_data'
@@ -97,6 +98,7 @@ User's Resume Information
 {pdf_content} 
 """
     txt = a.final(pmp)
+    new_d.upload_text_to_github(file_path, txt)
     return txt
 
 def input_pdf_setup(uploaded_file):
