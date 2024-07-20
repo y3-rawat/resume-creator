@@ -1,5 +1,4 @@
 import requests
-import json
 import base64
 import time
 from requests.exceptions import RequestException
@@ -26,7 +25,7 @@ def upload_text_to_github(new_content, token, repo, file_path='Res_d.txt', branc
                 sha = None
 
             # Append new content
-            combined_content = existing_content + ',\n' + new_content if existing_content else new_content
+            combined_content = existing_content + ',' + new_content if existing_content else new_content
             encoded_content = base64.b64encode(combined_content.encode('utf-8')).decode('utf-8')
 
             # Prepare payload

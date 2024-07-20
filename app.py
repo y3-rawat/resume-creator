@@ -1,3 +1,8 @@
+import requests
+import base64
+import time
+from requests.exceptions import RequestException
+
 from new_d import upload_text_to_github
 from langchain_community.document_loaders import PyPDFLoader
 import os
@@ -14,22 +19,17 @@ import new_d
 def read_users():
     j = database.get_file(User_DB_Path)
     return json.loads(j)
-import json
+
 
 def write_users(job_desc, pdf_content, filepath, prompt, response):
     try:
-        format_json = json.dumps({
-            "Job Description": job_desc[:100],  # Limit length to avoid very large strings
-            "PDF Content": pdf_content[:100],
-            "File Path": filepath,
-            "Prompt": prompt[:100],
-            "Response": response[:100]
-        }, ensure_ascii=False)
+        # Format the data as a comma-separated string
+        formatted_data = f"{job_desc[:100]},{pdf_content[:100]},{filepath},{prompt[:100]},{response[:100]}"
         
-        print("Uploading data:", format_json)
+        print("Uploading data:", formatted_data)
 
         success = upload_text_to_github(
-            new_content=format_json,
+            new_content=formatted_data,
             token='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',
             repo='company2candidate/Resume_data',
             max_retries=3,
@@ -43,7 +43,6 @@ def write_users(job_desc, pdf_content, filepath, prompt, response):
 
     except Exception as e:
         print(f"Error in write_users: {str(e)}")
-
 
 
 def oth(text):
