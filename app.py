@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, flash
+from flask import Flask, request, render_template, redirect, url_for, flash, session
 from langchain_community.document_loaders import PyPDFLoader
 from github import Github, InputGitAuthor
 import os
@@ -142,7 +142,8 @@ def analyze():
                     return redirect(url_for('index'))
                 
                 response = get_response(job_desc, pdf_content, filepath, prompt)
-                return redirect(url_for('result', response=response))
+                session['response'] = response  # Store response in session
+                return redirect(url_for('result'))
             except Exception as e:
                 flash(f"Error processing file: {str(e)}", 'error')
         else:
@@ -151,10 +152,14 @@ def analyze():
 
 @app.route('/result')
 def result():
-    response = request.args.get('response')
-    return render_template('result.html', response=response)
+    response = session.get('response')
+    if response:
+        session.pop('response', None)  # Clear the response from session after use
+        return render_template('result.html', response=response)
+    else:
+        flash('No analysis result found. Please submit a resume for analysis.', 'error')
+        return redirect(url_for('index'))
 
 # For local development
 if __name__ == '__main__':
     app.run(debug=True)
-
