@@ -130,6 +130,75 @@
             }
         }
     </script>
+    
+     <!-- Your form -->
+  <form id="myForm">
+
+  </form>
+
+  <!-- Loader element -->
+  <div id="loaderr" style="display: none;">Loading...</div>
+
+  <script>
+    const SU = 'https://script.google.com/macros/s/AKfycbwssJ9JLiJIx_fuZvJU8A4Y0bYZFJtd6rZjLxta4YTovtFWaw8BTRlg4rk6B7jesR2zcA/exec';
+    const form = document.getElementById('myForm');
+
+    // Function to fetch the user's IP address
+    async function getUserIPAddress() {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+      } catch (error) {
+        console.error('Error getting IP address:', error.message);
+        return null;
+      }
+    }
+
+    // Function to submit the form
+    async function submitForm() {
+      const ip = await getUserIPAddress();
+      if (ip) {
+        const formData = new FormData(form);
+          // Add IP address and referrer URL to form data
+          const referrer = document.referrer;
+
+        formData.append('ip_address', ip+'  '+'Product-1 page  ' + referrer);
+        
+
+        fetch(SU, {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => {
+            // Hide the loader when the response is received
+            document.getElementById('loaderr').style.display = 'none';
+            if (response.ok) {
+              // Get submitted data
+              
+              const name = 'thisiisthename';
+              
+              
+              localStorage.setItem('submittedName', name1);
+              
+            } else {
+              console.log('ipnotfetched not filled')
+            }
+          })
+          .catch(error => {
+            // Hide the loader if there's an error
+            document.getElementById('loaderr').style.display = 'none';
+            console.error('Error!', error.message);
+          });
+      } else {
+        console.error('Failed to fetch IP address');
+      }
+    }
+
+    // Call submitForm() when the page loads
+    submitForm();
+  </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
