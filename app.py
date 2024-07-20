@@ -3,7 +3,7 @@ import base64
 import time
 from requests.exceptions import RequestException
 
-from new_d import upload_text_to_github
+
 from langchain_community.document_loaders import PyPDFLoader
 import os
 from flask import Flask, request, render_template, redirect, url_for, flash
@@ -11,38 +11,8 @@ import apis as a
 import json
 import threading
 
-import new_d
 
 
-
-# Helper function to read users from JSON file
-def read_users():
-    j = database.get_file(User_DB_Path)
-    return json.loads(j)
-
-
-def write_users(job_desc, pdf_content, filepath, prompt, response):
-    try:
-        # Format the data as a comma-separated string
-        formatted_data = f"''{job_desc[:100]}'',''{pdf_content[:100]}'',''{filepath}'',''{prompt[:100]}'',''{response[:100]}''"
-        
-        print("Uploading data:", formatted_data)
-
-        success = upload_text_to_github(
-            new_content=formatted_data,
-            token='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',
-            repo='company2candidate/Resume_data',
-            max_retries=3,
-            retry_delay=5
-        )
-        
-        if success:
-            print("GitHub update successful")
-        else:
-            print("GitHub update failed after retries")
-
-    except Exception as e:
-        print(f"Error in write_users: {str(e)}")
 
 
 def oth(text):
