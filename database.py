@@ -1,10 +1,10 @@
 import json
 import requests
-import json
 import base64
 
 from github import Github, InputGitAuthor
-github="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"
+
+github = "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"
 g = Github(github)
 repo = g.get_repo("company2candidate/Resume_data")
 
@@ -12,37 +12,45 @@ def repository():
     repo = g.get_repo("company2candidate/Resume_data")
     return repo
 
-import base64
 branch = 'main'
+
 def update_file(new_content, fpth):
     try:
-        print("under databse")
+        print("under database")
         file_content = repo.get_contents(fpth, ref=branch)
         decoded_content = base64.b64decode(file_content.content).decode('utf-8')
+        existing_content = json.loads(decoded_content)
+
+        # Ensure new_content is a dictionary
+        if isinstance(new_content, str):
+            new_content = json.loads(new_content)
+
+        # Update the existing content with new content
+        existing_content.update(new_content)
         
-        new_con = f"{decoded_content} {new_content}"
-        print("updateing file")
-        # new_content_str = json.dumps(c)  # Convert the dictionary to a string
-        repo.update_file(fpth, "COMMIT_MESSAGE", new_con, file_content.sha)
+        new_content_str = json.dumps(existing_content, indent=4)  # Convert the dictionary to a formatted string
+        repo.update_file(fpth, "COMMIT_MESSAGE", new_content_str, file_content.sha)
         print("File updated successfully!")
 
     except github.GithubException as e:
         if e.status == 404:
             # File does not exist, create it
-            new_content_str = json.dumps(new_content)
+            new_content_str = json.dumps(new_content, indent=4)
             repo.create_file(fpth, "COMMIT_MESSAGE", new_content_str)
             print("File created successfully!")
         else:
             print("Error updating file:", e)
-
-
+    except Exception as e:
+        print("Unexpected error:", e)
 
 def get_file(path):
-
-    file_content = repo.get_contents(path, ref=branch)
-    decoded_content = base64.b64decode(file_content.content).decode('utf-8')
-    
-    return decoded_content
+    try:
+        file_content = repo.get_contents(path, ref=branch)
+        decoded_content = base64.b64decode(file_content.content).decode('utf-8')
+        return decoded_content
+    except Exception as e:
+        print("Error getting file:", e)
+        return None
 
 def rename_file(old_path, new_path):
     try:
@@ -60,8 +68,7 @@ def rename_file(old_path, new_path):
     except Exception as e:
         print("Error renaming file:", e)
 
-    
-def list_files_in_directory( path, branch):
+def list_files_in_directory(path, branch):
     try:
         contents = repo.get_contents(path, ref=branch)
         files = []
@@ -71,12 +78,10 @@ def list_files_in_directory( path, branch):
             if content.type == 'file':
                 files.append(content.path)
             elif content.type == 'dir':
-                files += list_files_in_directory(repo, content.path, branch)
+                files += list_files_in_directory(content.path, branch)
         for i in files:
             final_file.append(i.split("/")[1])
         return final_file
     except Exception as e:
         print("Error listing files:", e)
         return []
-
-# List files in the specified directory
