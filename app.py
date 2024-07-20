@@ -6,7 +6,7 @@ import json
 import threading
 
 import database
-User_DB_Path = "Resd.json"
+User_DB_Path = "Res_d.json"
 
 # Helper function to read users from JSON file
 def read_users():
