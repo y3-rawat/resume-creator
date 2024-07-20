@@ -56,37 +56,3 @@ def upload_text_to_github(new_content, token, repo, file_path='Res_d.txt', branc
     return False
 
 
-def upload_pdf_to_github(file_path, token, repo, owner, branch='main', commit_message='Upload PDF file'):
-    # Prepare headers
-    headers = {
-        'Authorization': f'token {token}',
-        'Accept': 'application/vnd.github.v3+json'
-    }
-
-    # Prepare API endpoint
-    url = f'https://api.github.com/repos/{owner}/{repo}/contents/{file_path.split("/")[-1]}'
-
-    # Load PDF file content
-    with open(file_path, 'rb') as file:
-        pdf_content = file.read()
-
-    # Encode file content to Base64
-    encoded_content = base64.b64encode(pdf_content).decode('utf-8')
-
-    # Prepare JSON payload
-    payload = {
-        'message': commit_message,
-        'content': encoded_content,
-        'branch': branch
-    }
-
-    # Make PUT request to create new file
-    response = requests.put(url, headers=headers, json=payload)
-
-    if response.status_code == 201:
-        print(f'File {file_path} successfully uploaded to {owner}/{repo}!')
-        return True
-    else:
-        print(f'Failed to upload file {file_path}. Status code: {response.status_code}')
-        print(f'Response: {response.text}')
-        return False

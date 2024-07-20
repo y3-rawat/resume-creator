@@ -105,7 +105,7 @@ def input_pdf_setup(uploaded_file):
         uploaded_file.save(filepath)
         loader = PyPDFLoader(file_path=filepath)
         pages = loader.load_and_split()
-        n__d.upload_pdf_to_github(filepath)
+        # n__d.upload_pdf_to_github(filepath)
         if len(pages) < 1:
             raise ValueError("The PDF file has no pages.")
         text = " ".join(list(map(lambda page: page.page_content, pages)))
