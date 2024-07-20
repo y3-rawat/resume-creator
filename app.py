@@ -75,7 +75,7 @@ def input_pdf_setup(uploaded_file):
         loader = PyPDFLoader(file_path=filepath)
         pages = loader.load_and_split()
         if len(pages) > 3:
-            raise ValueError("it dosen't look like a pdf.")
+            flash("Please enter the Resume which should less then 3 pages.")
         text = " ".join(list(map(lambda page: page.page_content, pages)))
         return text, filepath
     else:
