@@ -66,7 +66,7 @@ def get_response(job_desc, pdf_content,filepath, prompt):
     {pdf_content} 
     """
     txt = a.final(pmp)
-    threading.Thread(target=write_users, args=(job_desc, pdf_content, filepath, prompt, txt)).start()
+    
     return txt
 
 def input_pdf_setup(uploaded_file):
