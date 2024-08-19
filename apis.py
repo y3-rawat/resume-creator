@@ -28,12 +28,12 @@ def groq(input,key):
     )
     
     return chat.invoke(input)
-def final(Input):
+def final(Input,api):
        
 
     print("calling from groq")
     print(keys()[0])
     # return groq(Input,groq_keys[keys()[0]])
-    return groq(Input,groq_keys[keys()[0]]).content
+    return groq(Input,api).content
 
 

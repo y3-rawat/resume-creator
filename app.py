@@ -55,7 +55,7 @@ your task is to evaluate the resume against the provided job description. Give m
 the job description. First the output should come as percentage and then keywords missing and last final thoughts.
 """
 
-def get_response(job_desc, pdf_content,filepath, prompt):
+def get_response(job_desc, pdf_content,filepath, prompt,api):
     pmp = f"""{prompt} 
     job description 
     --------
@@ -64,7 +64,7 @@ def get_response(job_desc, pdf_content,filepath, prompt):
     User's Resume Information
     {pdf_content} 
     """
-    txt = a.final(pmp)
+    txt = a.final(pmp,api)
     
     return txt
 
@@ -103,6 +103,8 @@ def analyze():
         job_desc = request.form['job_description']
         uploaded_file = request.files['resume']
         action = request.form['action']
+        api = request.form['groq-api']
+        
 
         if uploaded_file:
             try:
@@ -122,7 +124,7 @@ def analyze():
                     flash('Invalid action selected', 'error')
                     return redirect(url_for('index'))
                 
-                response = get_response(job_desc, pdf_content, filepath,prompt)
+                response = get_response(job_desc, pdf_content, filepath,prompt,api)
                 
                 # Start a new thread to write users in the background
                 
