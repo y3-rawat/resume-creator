@@ -204,9 +204,15 @@
             overflow: visible;
         }
 
-        .ci1, .ci2 {
+        .ci1 {
             fill: var(--higru);
-            animation: toBig 3s infinite;
+            animation: toBig 3s infinite -1.5s;
+            transform-box: fill-box;
+            transform-origin: 50% 50%;
+        }
+        .ci2 {
+            fill: var(--higru);
+            animation: toBig2 3s infinite;
             transform-box: fill-box;
             transform-origin: 50% 50%;
         }
@@ -224,19 +230,93 @@
         }
 
         @keyframes rot {
-            0%, 100% { transform: rotate(0deg); }
-            30%, 50% { transform: rotate(360deg); }
-            80% { transform: rotate(0deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            30% {
+                transform: rotate(360deg);
+            }
+
+            50% {
+                transform: rotate(360deg);
+            }
+
+            80% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+          
         }
 
         @keyframes toBig {
-            0%, 30%, 100% { transform: scale(1) translateX(0px); }
-            50%, 80% { transform: scale(10) translateX(-4.5px); }
+            0% {
+                transform: scale(1) translateX(0px);
+            }
+
+            30% {
+                transform: scale(1) translateX(0px);
+            }
+
+            50% {
+                transform: scale(10) translateX(-4.5px);
+            }
+            80% {
+                transform: scale(10) translateX(-4.5px);
+            }
+            100% {
+                transform: scale(1) translateX(0px);
+            }
+        }  @keyframes toBig2 {
+            0% {
+                transform: scale(1) translateX(0px);
+            }
+
+            30% {
+                transform: scale(1) translateX(0px);
+            }
+
+            50% {
+                transform: scale(10) translateX(4.5px);
+            }
+
+            80% {
+                transform: scale(10) translateX(4.5px);
+            }
+
+            100% {
+                transform: scale(1) translateX(0px);
+            }
         }
 
         @keyframes breath {
-            15%, 65% { transform: scale(1); }
-            40%, 90% { transform: scale(1.1); }
+            15% {
+                transform: scale(1);
+            }
+
+            40% {
+                transform: scale(1.1);
+            }
+
+            65% {
+                transform: scale(1);
+            }
+
+            90% {
+                transform: scale(1.1);
+            }
+        }
+
+        .dwf, .share {
+            position: fixed;
+            bottom: 4px;
+            right: 10px;
+            background-color: #0003;
+            padding: 3px;
+            border-radius: 3px;
         }
 
         .how-to-use-btn {
